@@ -41,6 +41,9 @@ Tester::Tester(int argc,char **argv) {
 
 	std::cout << std::endl;
 	this->skeleton.getRoot()->printChildren(); 
+	Matrix34 *identity = new Matrix34(); 
+	identity->Identity(); 
+	this->skeleton.getRoot()->ComputeWorldMatrix(identity);
 	// Create the window
 	glutInitDisplayMode( GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH );
 	glutInitWindowSize( WinX, WinY );

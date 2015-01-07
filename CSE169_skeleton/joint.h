@@ -39,7 +39,8 @@ public:
 	joint* getParent(); 
 	void printChildren();
 	void drawBone(); 
-	void ComputeWorldMatrix(Matrix34 parentMatrix);
+	void ComputeWorldMatrix(Matrix34 *parentMatrix);
+	Matrix34 ComputeLocalMatrix();
 	//if want to 
 	//virtual void MakeLocalMatrix();
 	~joint();

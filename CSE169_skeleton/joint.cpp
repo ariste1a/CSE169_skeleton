@@ -80,6 +80,7 @@ void joint::addChild(joint* child)
 }
 
 //TODO: update each world matrix first, then call draw cursively 
+/*
 void joint::draw()
 {
 	//need to recursively call and define shit. 
@@ -104,6 +105,16 @@ void joint::draw()
 		children[i]->draw(); 		
 	}
 	//determine what shape
+}*/ 
+
+void joint::draw()
+{
+	glLoadMatrixf(*(this->world));
+	drawWireBox(boxmin.x, boxmin.y, boxmin.z, boxmax.x, boxmax.y, boxmax.z);
+	for (int i = 0; i < this->children.size(); i++)
+	{
+		children[i]->draw();
+	}
 }
 
 std::string joint::getName()
@@ -121,15 +132,24 @@ void joint::setParent(joint* parent)
 	this->parent = parent; 
 }
 
-/*
-void joint::ComputeWorldMatrix(Matrix34 parentMtx) {
-	//Matrix34 localMtx = ComputeLocalMatrix();
-	this->world = local * parentMtx;
-	for i = 1 to NumChildJoints{
-		ChildJoint[i].ComputeWorldMatrix(WorldMtx)
-	}
-}*/ 
 
+void joint::ComputeWorldMatrix(Matrix34 *parentMtx) {
+	this->local = &ComputeLocalMatrix();
+	this->world->Dot(*local,*parentMtx);
+	for (int i = 0; i < this->children.size(); i++)
+	{		
+		children[i]->ComputeWorldMatrix(this->world);
+	}
+}
+
+Matrix34 joint::ComputeLocalMatrix()
+{
+	this->local = new Matrix34();
+	Matrix34 *trans = new Matrix34();
+	trans->MakeTranslate(this->offset);
+	local->Dot(*local, *trans);
+	return *local;
+}
 joint::~joint()
 {
 
