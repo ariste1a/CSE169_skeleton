@@ -106,7 +106,7 @@ void Tester::Draw() {
 
 	// Draw components
 	Cam.Draw();		// Sets up projection & viewing matrices
-	Cube.Draw();
+	//Cube.Draw();
 	skeleton.draw(); 
 
 	// Finish drawing scene

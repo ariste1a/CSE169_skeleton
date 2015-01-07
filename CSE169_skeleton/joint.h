@@ -5,6 +5,7 @@
 #include "../token.h"
 #include <string>
 #include "../vector3.h"
+#include "../core.h"
 class joint
 {
 private: 	
@@ -37,6 +38,8 @@ public:
 	void setParent(joint* parent); 
 	joint* getParent(); 
 	void printChildren();
+	void drawBone(); 
+	void ComputeWorldMatrix(Matrix34 parentMatrix);
 	//if want to 
 	//virtual void MakeLocalMatrix();
 	~joint();

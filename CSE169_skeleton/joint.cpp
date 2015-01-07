@@ -21,12 +21,7 @@ bool joint::load(Tokenizer &tokenizer)
 		if (strcmp(temp, "offset") == 0) {			
 			offset[0] = tokenizer.GetFloat();
 			offset[1] = tokenizer.GetFloat();
-			offset[2] = tokenizer.GetFloat();
-			/*
-			std::cout << offset[0] << std::endl; 
-			std::cout << offset[1] << std::endl;
-			std::cout << offset[2] << std::endl;
-			std::cout << std::endl; */ 
+			offset[2] = tokenizer.GetFloat();			
 		}				
 		if (strcmp(temp, "boxmin") == 0) {
 			boxmin[0] = tokenizer.GetFloat();
@@ -47,6 +42,7 @@ bool joint::load(Tokenizer &tokenizer)
 		if (strcmp(temp, "rotzlimit") == 0) {
 			rotzlimit.setMinMax(tokenizer.GetFloat(), tokenizer.GetFloat());
 		}
+		//degrees for each axis right?
 		if (strcmp(temp, "pose") == 0) {
 			pose[0] = tokenizer.GetFloat(); 
 			pose[1] = tokenizer.GetFloat();
@@ -83,26 +79,28 @@ void joint::addChild(joint* child)
 	this->children.push_back(child); 
 }
 
-//update each world matrix first, then call draw cursively 
+//TODO: update each world matrix first, then call draw cursively 
 void joint::draw()
 {
 	//need to recursively call and define shit. 
 	//need to redo the local matrix and multiply it by the world matrix (World * Local); 
 	glMatrixMode(GL_MODELVIEW);
 	//only want to make this once... 
-	this->local = new Matrix34(); 
+	this->local = new Matrix34(); 	
 	Matrix34 *trans = new Matrix34(); 
 	trans->MakeTranslate(this->offset); 
 	local->Dot(*local, *trans); 
 	//this->getOffset());
-	glLoadMatrixf(*(this->local));
+	//need to do localmatrix * parentmatrix....
+	glLoadMatrixf(*(this->world));
 	//glLoadMatrixf(*(this->world));
-	glutWireCube(2);	
-	std::cout << this->getName() << std::endl; 
+	//glutWireCube(2);
+	drawWireBox(boxmin.x, boxmin.y, boxmin.z, boxmax.x, boxmax.y, boxmax.z);
+	//std::cout << this->getName() << std::endl; 
 	//
 	for (int i = 0; i < this->children.size(); i++)
 	{
-		std::cout << this->children[i]->getName() << std::endl;
+		//std::cout << this->children[i]->getName() << std::endl;
 		children[i]->draw(); 		
 	}
 	//determine what shape
@@ -122,6 +120,17 @@ void joint::setParent(joint* parent)
 {
 	this->parent = parent; 
 }
+
+/*
+void joint::ComputeWorldMatrix(Matrix34 parentMtx) {
+	//Matrix34 localMtx = ComputeLocalMatrix();
+	this->world = local * parentMtx;
+	for i = 1 to NumChildJoints{
+		ChildJoint[i].ComputeWorldMatrix(WorldMtx)
+	}
+}*/ 
+
 joint::~joint()
 {
+
 }
