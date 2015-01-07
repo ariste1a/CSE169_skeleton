@@ -89,10 +89,14 @@ void joint::draw()
 	//need to recursively call and define shit. 
 	//need to redo the local matrix and multiply it by the world matrix (World * Local); 
 	glMatrixMode(GL_MODELVIEW);
+	//only want to make this once... 
 	this->local = new Matrix34(); 
-	local->MakeTranslate( ); 
+	Matrix34 *trans = new Matrix34(); 
+	trans->MakeTranslate(this->offset); 
+	local->Dot(*local, *trans); 
 	//this->getOffset());
-	glLoadMatrixf(*(this->world));
+	glLoadMatrixf(*(this->local));
+	//glLoadMatrixf(*(this->world));
 	glutWireCube(2);	
 	std::cout << this->getName() << std::endl; 
 	//

@@ -4,6 +4,7 @@
 #include <vector>
 #include "../token.h"
 #include <string>
+#include "../vector3.h"
 class joint
 {
 private: 	
@@ -12,14 +13,14 @@ private:
 	std::vector<DOF*> dofs;
 	joint *parent;	
 	std::vector<joint*> children; 
-	std::string name; 
-	std::vector<float> offset = *(new std::vector<float>(3, 0.0)); 
-	std::vector<float> boxmin = *(new std::vector<float>(3, -0.1)); 
-	std::vector<float> boxmax = *(new std::vector<float>(3, 0.1));
+	std::string name; 	
+	Vector3 offset = *(new Vector3(0, 0, 0));	
+	Vector3 boxmin = *(new Vector3(-0.1, -0.1, -0.1));
+	Vector3 boxmax = *(new Vector3(0.1, 0.1, 0.1));
 	DOF rotxlimit;
 	DOF rotylimit;
 	DOF rotzlimit;
-	std::vector<float> pose = *(new std::vector<float>(3,0.0));
+	Vector3 pose = *(new Vector3(0,0,0));	
 	
 public:		
 	joint();
