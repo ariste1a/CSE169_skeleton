@@ -79,34 +79,6 @@ void joint::addChild(joint* child)
 	this->children.push_back(child); 
 }
 
-//TODO: update each world matrix first, then call draw cursively 
-/*
-void joint::draw()
-{
-	//need to recursively call and define shit. 
-	//need to redo the local matrix and multiply it by the world matrix (World * Local); 
-	glMatrixMode(GL_MODELVIEW);
-	//only want to make this once... 
-	this->local = new Matrix34(); 	
-	Matrix34 *trans = new Matrix34(); 
-	trans->MakeTranslate(this->offset); 
-	local->Dot(*local, *trans); 
-	//this->getOffset());
-	//need to do localmatrix * parentmatrix....
-	glLoadMatrixf(*(this->world));
-	//glLoadMatrixf(*(this->world));
-	//glutWireCube(2);
-	drawWireBox(boxmin.x, boxmin.y, boxmin.z, boxmax.x, boxmax.y, boxmax.z);
-	//std::cout << this->getName() << std::endl; 
-	//
-	for (int i = 0; i < this->children.size(); i++)
-	{
-		//std::cout << this->children[i]->getName() << std::endl;
-		children[i]->draw(); 		
-	}
-	//determine what shape
-}*/ 
-
 void joint::draw()
 {
 	glLoadMatrixf(*(this->world));
@@ -135,7 +107,7 @@ void joint::setParent(joint* parent)
 
 void joint::ComputeWorldMatrix(Matrix34 *parentMtx) {
 	this->local = &ComputeLocalMatrix();
-	this->world->Dot(*local,*parentMtx);
+	this->world->Dot(*parentMtx,*local);
 	for (int i = 0; i < this->children.size(); i++)
 	{		
 		children[i]->ComputeWorldMatrix(this->world);
@@ -144,10 +116,50 @@ void joint::ComputeWorldMatrix(Matrix34 *parentMtx) {
 
 Matrix34 joint::ComputeLocalMatrix()
 {
+	//local: scale -> rotate -> translate
 	this->local = new Matrix34();
+	local->Identity(); 
+
 	Matrix34 *trans = new Matrix34();
-	trans->MakeTranslate(this->offset);
-	local->Dot(*local, *trans);
+	trans->MakeTranslate(this->offset);	
+
+	//clamping?
+	//these are in radians, need to wrap around and divide by 2pi
+	//messed up because of this?
+	Matrix34 *rotation = new Matrix34(); 
+	/*
+	if (pose.x > rotxlimit.getMax())
+	{
+	pose.x = rotxlimit.getMax();
+	}
+	else if (pose.x < rotxlimit.getMin())
+	{
+	pose.x = rotxlimit.getMin();
+	}
+
+	if (pose.y > rotylimit.getMax())
+	{
+	pose.y = rotylimit.getMax();
+	}
+	else if (pose.y < rotylimit.getMin())
+	{
+	pose.y = rotylimit.getMin();
+	}
+
+	if (pose.z > rotzlimit.getMax())
+	{
+	pose.z = rotzlimit.getMax();
+	}
+	else if (pose.z < rotzlimit.getMin())
+	{
+	pose.z = rotzlimit.getMin();
+	}
+	*/
+	//how to create rotations from 3x 1-DOFs? how to multiply them?
+	rotation->FromEulers(pose.x, pose.y, pose.z, 5	);
+		
+	local->Dot(*trans, *rotation);
+	//local->Dot(*rotation, *trans); 
 	return *local;
 }
 joint::~joint()

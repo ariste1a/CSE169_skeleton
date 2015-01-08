@@ -6,6 +6,7 @@
 #include <string>
 #include "../vector3.h"
 #include "../core.h"
+#include <cmath>
 class joint
 {
 private: 	

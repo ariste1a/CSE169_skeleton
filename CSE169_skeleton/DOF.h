@@ -19,7 +19,8 @@ public:
 	float getMax(); 
 	void setMin(float); 
 	void setMax(float); 
-	void setMinMax(float min, float max); 
+	void setMinMax(float min, float max);
+	double clampRad(double rad);
 	~DOF();
 };
 
