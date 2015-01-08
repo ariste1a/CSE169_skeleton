@@ -34,13 +34,23 @@ bool joint::load(Tokenizer &tokenizer)
 			boxmax[2] = tokenizer.GetFloat();
 		}
 		if (strcmp(temp, "rotxlimit") == 0) {
-			rotxlimit.setMinMax(tokenizer.GetFloat(), tokenizer.GetFloat());
+			float min = tokenizer.GetFloat(); 
+			float max = tokenizer.GetFloat(); 			
+			rotxlimit.setMinMax(min, max); 			
+			/*rotxlimit.setMinMax(tokenizer.GetFloat(), tokenizer.GetFloat());
+			std::cout << rotxlimit.getMin() << std::endl;*/
 		}
 		if (strcmp(temp, "rotylimit") == 0) {
-			rotylimit.setMinMax(tokenizer.GetFloat(), tokenizer.GetFloat());
+			//rotylimit.setMinMax(tokenizer.GetFloat(), tokenizer.GetFloat());
+			float min = tokenizer.GetFloat();
+			float max = tokenizer.GetFloat();
+			rotylimit.setMinMax(min, max);
 		}
 		if (strcmp(temp, "rotzlimit") == 0) {
-			rotzlimit.setMinMax(tokenizer.GetFloat(), tokenizer.GetFloat());
+			//rotzlimit.setMinMax(tokenizer.GetFloat(), tokenizer.GetFloat());
+			float min = tokenizer.GetFloat();
+			float max = tokenizer.GetFloat();
+			rotzlimit.setMinMax(min, max);
 		}
 		//degrees for each axis right?
 		if (strcmp(temp, "pose") == 0) {
@@ -127,36 +137,37 @@ Matrix34 joint::ComputeLocalMatrix()
 	//these are in radians, need to wrap around and divide by 2pi
 	//messed up because of this?
 	Matrix34 *rotation = new Matrix34(); 
-	/*
+	
 	if (pose.x > rotxlimit.getMax())
 	{
-	pose.x = rotxlimit.getMax();
+		pose.x = rotxlimit.getMax();
 	}
 	else if (pose.x < rotxlimit.getMin())
 	{
-	pose.x = rotxlimit.getMin();
+		
+		pose.x = rotxlimit.getMin();
 	}
 
 	if (pose.y > rotylimit.getMax())
 	{
-	pose.y = rotylimit.getMax();
+		pose.y = rotylimit.getMax();
 	}
 	else if (pose.y < rotylimit.getMin())
 	{
-	pose.y = rotylimit.getMin();
+		pose.y = rotylimit.getMin();
 	}
 
 	if (pose.z > rotzlimit.getMax())
 	{
-	pose.z = rotzlimit.getMax();
+		pose.z = rotzlimit.getMax();
 	}
 	else if (pose.z < rotzlimit.getMin())
 	{
-	pose.z = rotzlimit.getMin();
+		pose.z = rotzlimit.getMin();
 	}
-	*/
+	
 	//how to create rotations from 3x 1-DOFs? how to multiply them?
-	rotation->FromEulers(pose.x, pose.y, pose.z, 5	);
+	rotation->FromEulers(pose.x, pose.y, pose.z, 0	);
 		
 	local->Dot(*trans, *rotation);
 	//local->Dot(*rotation, *trans); 

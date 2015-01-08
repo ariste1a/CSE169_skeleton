@@ -25,16 +25,19 @@ float DOF::getMax()
 }
 void DOF::setMin(float min)
 {
-	this->min = clampRad(min);
+	//this->min = clampRad(min);
+	this->min = min; 
 }
 void DOF::setMax(float max)
 {
-	this->max = clampRad(max);
+	//this->max = clampRad(max);
+	this->max = max; 
+
 }
 void DOF::setMinMax(float min, float max)
 {
-	this->min = clampRad(min);
-	this->max = clampRad(max);
+	this->min = min;
+	this->max = max; 
 }
 /*
 startAngle = fmod(startAngle, 360.0);
