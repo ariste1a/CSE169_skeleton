@@ -88,6 +88,7 @@
     <ClInclude Include="DOF.h" />
     <ClInclude Include="joint.h" />
     <ClInclude Include="Offset.h" />
+    <ClInclude Include="pose.h" />
     <ClInclude Include="Skeleton.h" />
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +102,7 @@
     <ClCompile Include="DOF.cpp" />
     <ClCompile Include="joint.cpp" />
     <ClCompile Include="Offset.cpp" />
+    <ClCompile Include="pose.cpp" />
     <ClCompile Include="Skeleton.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

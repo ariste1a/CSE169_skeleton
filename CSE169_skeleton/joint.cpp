@@ -168,10 +168,35 @@ Matrix34 joint::ComputeLocalMatrix()
 	
 	//how to create rotations from 3x 1-DOFs? how to multiply them?
 	rotation->FromEulers(pose.x, pose.y, pose.z, 0	);
-		
+	
 	local->Dot(*trans, *rotation);
 	//local->Dot(*rotation, *trans); 
 	return *local;
+}
+
+Vector3 joint::getPose()
+{
+	return this->pose;
+}
+
+Matrix34* joint::getLocal()
+{
+	return this->local;
+}
+
+DOF joint::getRotXLimit()
+{
+	return this->rotxlimit;
+}
+
+DOF joint::getRotYLimit()
+{
+	return this->rotylimit;
+}
+
+DOF joint::getRotZLimit()
+{
+	return this->rotzlimit;
 }
 joint::~joint()
 {

@@ -42,6 +42,11 @@ public:
 	void drawBone(); 
 	void ComputeWorldMatrix(Matrix34 *parentMatrix);
 	Matrix34 ComputeLocalMatrix();
+	Vector3 getPose();
+	Matrix34* getLocal();
+	DOF getRotXLimit();
+	DOF getRotYLimit();
+	DOF getRotZLimit();
 	//if want to 
 	//virtual void MakeLocalMatrix();
 	~joint();
