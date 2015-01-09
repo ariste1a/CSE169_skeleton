@@ -165,12 +165,11 @@ Matrix34 joint::ComputeLocalMatrix()
 	{
 		pose.z = rotzlimit.getMin();
 	}
-	
-	//how to create rotations from 3x 1-DOFs? how to multiply them?
+	//should move the pose outside of this?
 	rotation->FromEulers(pose.x, pose.y, pose.z, 0	);
 	
-	local->Dot(*trans, *rotation);
-	//local->Dot(*rotation, *trans); 
+	local->Dot(*trans, *rotation); 
+	
 	return *local;
 }
 

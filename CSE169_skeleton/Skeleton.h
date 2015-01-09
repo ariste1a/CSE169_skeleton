@@ -4,10 +4,13 @@
 #include "../token.h"
 #include <vector> 
 #include "Offset.h"
+#include "pose.h"
 class Skeleton
 {
 private: 
 	joint * skelRoot; 
+	pose* pose; 
+	Matrix34 *local = new Matrix34(); 
 public:
 	Skeleton();
 	void init(); 

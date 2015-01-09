@@ -33,6 +33,11 @@ void Skeleton::draw()
 {
 	this->getRoot()->draw(); 
 }
+
+void Skeleton::update()
+{	
+	this->skelRoot->ComputeWorldMatrix(local);
+}
 Skeleton::~Skeleton()
 {
 }

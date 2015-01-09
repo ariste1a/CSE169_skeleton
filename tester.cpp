@@ -40,10 +40,8 @@ Tester::Tester(int argc,char **argv) {
 	skeleton.load(argv[1]); 
 
 	std::cout << std::endl;
-	this->skeleton.getRoot()->printChildren(); 
-	Matrix34 *identity = new Matrix34(); 
-	identity->Identity(); 
-	this->skeleton.getRoot()->ComputeWorldMatrix(identity);
+	this->skeleton.getRoot()->printChildren(); 	
+
 	// Create the window
 	glutInitDisplayMode( GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH );
 	glutInitWindowSize( WinX, WinY );
@@ -84,7 +82,7 @@ void Tester::Update() {
 	// Update the components in the world
 	Cam.Update();
 	Cube.Update();
-
+	skeleton.update(); 
 	// Tell glut to re-display the scene
 	glutSetWindow(WindowHandle);
 	glutPostRedisplay();
