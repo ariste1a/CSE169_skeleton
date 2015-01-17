@@ -8,6 +8,7 @@
 #include "core.h"
 #include "camera.h"
 #include "cube.h"
+#include "CSE169_skeleton\skin.h"
 #include "CSE169_skeleton\Skeleton.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -42,6 +43,7 @@ private:
 	Camera Cam;
 	SpinningCube Cube;
 	Skeleton skeleton;
+	skin skin; 
 };
 
 ////////////////////////////////////////////////////////////////////////////////

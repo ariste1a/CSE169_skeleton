@@ -122,6 +122,7 @@ void joint::ComputeWorldMatrix(Matrix34 *parentMtx) {
 	{		
 		children[i]->ComputeWorldMatrix(this->world);
 	}
+	//for skinning: v' = v * W 
 }
 
 Matrix34 joint::ComputeLocalMatrix()
@@ -132,43 +133,8 @@ Matrix34 joint::ComputeLocalMatrix()
 
 	Matrix34 *trans = new Matrix34();
 	trans->MakeTranslate(this->offset);	
-
-	//clamping?
-	//these are in radians, need to wrap around and divide by 2pi
-	//messed up because of this?
-	Matrix34 *rotation = new Matrix34(); 
 	
-	if (pose.x > rotxlimit.getMax())
-	{
-		pose.x = rotxlimit.getMax();
-	}
-	else if (pose.x < rotxlimit.getMin())
-	{
-		
-		pose.x = rotxlimit.getMin();
-	}
-
-	if (pose.y > rotylimit.getMax())
-	{
-		pose.y = rotylimit.getMax();
-	}
-	else if (pose.y < rotylimit.getMin())
-	{
-		pose.y = rotylimit.getMin();
-	}
-
-	if (pose.z > rotzlimit.getMax())
-	{
-		pose.z = rotzlimit.getMax();
-	}
-	else if (pose.z < rotzlimit.getMin())
-	{
-		pose.z = rotzlimit.getMin();
-	}
-	//should move the pose outside of this?
-	rotation->FromEulers(pose.x, pose.y, pose.z, 0	);
-	
-	local->Dot(*trans, *rotation); 
+	local->Dot(*trans, doPose()); //don't pose until AFTER skinning 
 	
 	return *local;
 }
@@ -196,6 +162,42 @@ DOF joint::getRotYLimit()
 DOF joint::getRotZLimit()
 {
 	return this->rotzlimit;
+}
+
+Matrix34 joint::doPose()
+{
+ 	Matrix34 *rotation = new Matrix34();
+
+	if (pose.x > rotxlimit.getMax())
+	{
+		pose.x = rotxlimit.getMax();
+	}
+	else if (pose.x < rotxlimit.getMin())
+	{
+
+		pose.x = rotxlimit.getMin();
+	}
+
+	if (pose.y > rotylimit.getMax())
+	{
+		pose.y = rotylimit.getMax();
+	}
+	else if (pose.y < rotylimit.getMin())
+	{
+		pose.y = rotylimit.getMin();
+	}
+
+	if (pose.z > rotzlimit.getMax())
+	{
+		pose.z = rotzlimit.getMax();
+	}
+	else if (pose.z < rotzlimit.getMin())
+	{
+		pose.z = rotzlimit.getMin();
+	}
+	//should move the pose outside of this?
+	rotation->FromEulers(pose.x, pose.y, pose.z, 0);
+	return *rotation; 
 }
 joint::~joint()
 {

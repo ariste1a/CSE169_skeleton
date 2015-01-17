@@ -47,6 +47,7 @@ public:
 	DOF getRotXLimit();
 	DOF getRotYLimit();
 	DOF getRotZLimit();
+	Matrix34 doPose(); 
 	//if want to 
 	//virtual void MakeLocalMatrix();
 	~joint();
