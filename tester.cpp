@@ -39,6 +39,8 @@ Tester::Tester(int argc,char **argv) {
 	this->skeleton = *(new Skeleton()); 
 	skeleton.load(argv[1]); 
 	this->skin.load(argv[2]); 
+
+	this->skin.bind(&this->skeleton); 
 	std::cout << std::endl;
 	this->skeleton.getRoot()->printChildren(); 	
 	// Create the window
@@ -82,6 +84,7 @@ void Tester::Update() {
 	Cam.Update();
 	Cube.Update();
 	skeleton.update(); 
+	skin.drawTriangles();
 	// Tell glut to re-display the scene
 	glutSetWindow(WindowHandle);
 	glutPostRedisplay();
@@ -102,13 +105,14 @@ void Tester::Draw() {
 
 	// Begin drawing scene
 	glViewport(0, 0, WinX, WinY);
+	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Draw components
 	Cam.Draw();		// Sets up projection & viewing matrices
 	//Cube.Draw();
 	skeleton.draw(); 
-
+	skin.drawTriangles();
 	// Finish drawing scene
 	glFinish();
 	glutSwapBuffers();
