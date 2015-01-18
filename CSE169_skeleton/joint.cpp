@@ -133,10 +133,37 @@ Matrix34 joint::ComputeLocalMatrix()
 
 	Matrix34 *trans = new Matrix34();
 	trans->MakeTranslate(this->offset);	
-	
-	local->Dot(*trans, doPose()); //don't pose until AFTER skinning 
+	local->Dot(*local, *trans); 
+	//local->Dot(*trans, doPose());  //don't pose until AFTER skinning 
 	
 	return *local;
+}
+
+//here go through each binding matrix with the skin and apply the skins here. 
+Matrix34 joint::computeLocalWithPose()
+{
+	//local: scale -> rotate -> translate
+	this->local = new Matrix34();
+	local->Identity();
+
+	Matrix34 *trans = new Matrix34();
+	trans->MakeTranslate(this->offset);
+
+	local->Dot(*trans, doPose()); //don't pose until AFTER skinning 
+
+	return *local;
+}
+
+void joint::computeWorldWithPose(Matrix34 *parentMtx)
+{
+	this->local = &computeLocalWithPose();
+	this->world->Dot(*parentMtx, *local);
+	for (int i = 0; i < this->children.size(); i++)
+	{
+		children[i]->ComputeWorldMatrix(this->world);
+	}
+	//for skinning: v' = v * W 
+	
 }
 
 Vector3 joint::getPose()

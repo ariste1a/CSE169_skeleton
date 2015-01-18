@@ -48,6 +48,8 @@ public:
 	DOF getRotYLimit();
 	DOF getRotZLimit();
 	Matrix34 doPose(); 
+	Matrix34 computeLocalWithPose(); 
+	void computeWorldWithPose(Matrix34 *parentMtx);
 	//if want to 
 	//virtual void MakeLocalMatrix();
 	~joint();

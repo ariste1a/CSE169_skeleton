@@ -38,9 +38,7 @@ Tester::Tester(int argc,char **argv) {
 	std::cout << argv[1] << std::endl; 
 	this->skeleton = *(new Skeleton()); 
 	skeleton.load(argv[1]); 
-	this->skin.load(argv[2]); 
-
-	this->skin.bind(&this->skeleton); 
+	this->skin.load(argv[2]); 	
 	std::cout << std::endl;
 	this->skeleton.getRoot()->printChildren(); 	
 	// Create the window
