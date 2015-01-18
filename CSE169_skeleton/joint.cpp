@@ -10,7 +10,7 @@ bool joint::load(Tokenizer &tokenizer)
 {
 	char name[256];
 	tokenizer.GetToken(name); 
-	std::cout << name << std::endl;
+	//std::cout << name << std::endl;
 	this->name = name; 
 	this->world = new Matrix34(); 
 	this->world->Identity(); 
@@ -84,6 +84,18 @@ void joint::printChildren()
 		children[i]->printChildren(); 
 	}
 }
+
+void joint::traverse(std::vector<joint*>* joints)
+{
+	//std::cout << this->getName() << std::endl;
+	for (int i = 0; i < this->children.size(); i++)
+	{
+		std::cout << children[i]->getName() << std::endl;
+		joints->push_back(children[i]);
+		children[i]->traverse(joints);
+	}
+}
+
 void joint::addChild(joint* child)
 { 
 	this->children.push_back(child); 

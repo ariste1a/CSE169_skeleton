@@ -35,12 +35,24 @@ Tester::Tester(int argc,char **argv) {
 	LeftDown=MiddleDown=RightDown=false;
 	MouseX=MouseY=0;
 
+	//loading skeleton and skin
 	std::cout << argv[1] << std::endl; 
 	this->skeleton = *(new Skeleton()); 
 	skeleton.load(argv[1]); 
-	this->skin.load(argv[2]); 	
-	std::cout << std::endl;
-	this->skeleton.getRoot()->printChildren(); 	
+	this->skin.load(argv[2]); 
+	this->skin.skel = &this->skeleton; 
+	std::cout << std::endl;	
+	
+	//getting all the children
+	//this->skeleton.getRoot()->printChildren(); 	
+	std::vector<joint*>* joints = new std::vector<joint*>; 
+	joints->push_back(this->skeleton.getRoot()); 
+	std::cout << this->skeleton.getRoot()->getName() << std::endl; 
+	this->skeleton.getRoot()->traverse(joints);
+	std::cout << joints->size() << std::endl;
+
+
+
 	// Create the window
 	glutInitDisplayMode( GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH );
 	glutInitWindowSize( WinX, WinY );

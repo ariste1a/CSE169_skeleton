@@ -52,6 +52,7 @@ public:
 	void computeWorldWithPose(Matrix34 *parentMtx);
 	//if want to 
 	//virtual void MakeLocalMatrix();
+	void joint::traverse(std::vector<joint*>* joints);
 	~joint();
 };
 
