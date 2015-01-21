@@ -39,7 +39,7 @@ Tester::Tester(int argc,char **argv) {
 	std::cout << argv[1] << std::endl; 
 	this->skeleton = *(new Skeleton()); 
 	skeleton.load(argv[1]); 
-	this->skin.load(argv[2]); 
+	this->skin.load(argv[2]);
 	this->skin.skel = &this->skeleton; 
 	std::cout << std::endl;	
 	
@@ -50,6 +50,7 @@ Tester::Tester(int argc,char **argv) {
 	std::cout << this->skeleton.getRoot()->getName() << std::endl; 
 	this->skeleton.getRoot()->traverse(joints);
 	std::cout << joints->size() << std::endl;
+	this->skeleton.joints = *joints;
 
 
 
@@ -93,8 +94,8 @@ void Tester::Update() {
 	// Update the components in the world
 	Cam.Update();
 	Cube.Update();
-	skeleton.update(); 
-	skin.drawTriangles();
+	skeleton.update();
+	//skin.update(&this->skeleton);
 	// Tell glut to re-display the scene
 	glutSetWindow(WindowHandle);
 	glutPostRedisplay();
@@ -122,7 +123,8 @@ void Tester::Draw() {
 	Cam.Draw();		// Sets up projection & viewing matrices
 	//Cube.Draw();
 	skeleton.draw(); 
-	skin.drawTriangles();
+	
+	//skin.draw();
 	// Finish drawing scene
 	glFinish();
 	glutSwapBuffers();

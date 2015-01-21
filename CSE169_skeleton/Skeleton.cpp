@@ -36,7 +36,8 @@ void Skeleton::draw()
 
 void Skeleton::update()
 {	
-	this->skelRoot->ComputeWorldMatrix(local);
+	//this->skelRoot->ComputeWorldMatrix(local);
+	this->skelRoot->computeWorldWithPose(local);
 }
 Skeleton::~Skeleton()
 {

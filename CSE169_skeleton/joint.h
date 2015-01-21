@@ -53,6 +53,7 @@ public:
 	//if want to 
 	//virtual void MakeLocalMatrix();
 	void joint::traverse(std::vector<joint*>* joints);
+	Matrix34* getWorldMatrix(); 
 	~joint();
 };
 

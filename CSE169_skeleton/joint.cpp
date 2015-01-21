@@ -238,6 +238,11 @@ Matrix34 joint::doPose()
 	rotation->FromEulers(pose.x, pose.y, pose.z, 0);
 	return *rotation; 
 }
+
+Matrix34* joint::getWorldMatrix()
+{
+	return this->world;
+}
 joint::~joint()
 {
 
