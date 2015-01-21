@@ -1,0 +1,55 @@
+balljoint root {
+	offset 0 0 0
+	boxmin -1 -1 -1
+	boxmax 1 1 1 
+	pose 0 0.1 0
+	balljoint shoulder1 {
+		offset 1 0 0
+		boxmin 0 -0.5 -0.5
+		boxmax 3 0.5 0.5
+		pose 0 0 0
+		balljoint elbow1 {
+			offset 3 0 0
+			boxmin 0 -0.5 -0.5
+			boxmax 3 0.5 0.5
+			pose 0 0 0
+		}
+	}
+	balljoint shoulder2 {
+		offset -1 0 0
+		boxmin 0 -0.5 -0.5
+		boxmax -3 0.5 0.5
+		pose 0 0 0
+		balljoint elbow1 {
+			offset -3 0 0
+			boxmin 0 -0.5 -0.5
+			boxmax -3 0.5 0.5
+			pose 0 0 0
+		}
+	}
+	balljoint shoulder3 {
+		offset 0 0 1
+		boxmin -0.5 -0.5 0
+		boxmax 0.5 0.5 3
+		pose 0 0 0
+		balljoint elbow1 {
+			offset 0 0 3
+			boxmin -0.5 -0.5 0
+			boxmax 0.5 0.5 3
+			pose 0 0 0	
+		}
+	}
+	balljoint shoulder4 {
+		offset 0 0 -1
+		boxmin -0.5 -0.5 0
+		boxmax 0.5 0.5 -3
+		pose 0 0 0
+		balljoint elbow1 {
+			offset 0 0 -3
+			boxmin -0.5 -0.5 0
+			boxmax 0.5 0.5 -3
+			pose 0 0 0	
+		}
+	}
+
+}
