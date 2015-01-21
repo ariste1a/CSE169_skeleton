@@ -172,7 +172,7 @@ void joint::computeWorldWithPose(Matrix34 *parentMtx)
 	this->world->Dot(*parentMtx, *local);
 	for (int i = 0; i < this->children.size(); i++)
 	{
-		children[i]->ComputeWorldMatrix(this->world);
+		children[i]->computeWorldWithPose(this->world);
 	}
 	//for skinning: v' = v * W 
 	
