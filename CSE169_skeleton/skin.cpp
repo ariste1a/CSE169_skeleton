@@ -35,15 +35,21 @@ bool skin::load(const char *file)
 		this->normals.push_back(new Vector3(x, y, z));
 	}
 
+	/* NEED TO REDO*/
 	token.FindToken("skinweights");
 	positions = token.GetInt();
 	token.FindToken("{");
 	for (int i = 0; i < positions; i++)
 	{
-		float x = token.GetFloat();
-		float y = token.GetFloat();
-		float z = token.GetFloat();
-		this->skinWeights.push_back(new Vector3(x, y, z));
+
+		int numAttachments = token.GetFloat();
+		skinweight *skinWeight = new skinweight(); 
+		for (int i = 0; i < numAttachments; i++)
+		{
+			int jointNum = token.GetInt(); 
+			float weightVal = token.GetFloat(); 
+			skinWeight->jointWeightPair.push_back(new std::pair<int, float>(jointNum, weightVal));
+		}				
 	}
 	
 	token.FindToken("triangles");
@@ -156,21 +162,9 @@ void skin::update(Skeleton* skel)
 		Matrix34 *tempNormal = new Matrix34(); 
 		for (int j = 0; j < newMatrices->size(); j++)
 		{
-			//v' = v' + WiV*Mi
-			Vector3 *skinXpos = new Vector3(); 
-			*skinXpos = ((*skinWeights[i]) * (*(positions)[i]));
-			Vector3 *newVec = new Vector3(); 
-			(*newMatrices)[j]->Transform(*skinXpos, *newVec); //WiMi
-			tempVector = &(*tempVector + *newVec);
+		
 		}
-		//*(positions[i]) = *tempVector;
-		//posPrime.push_back(tempVector);
-		*(posPrime[i]) = *tempVector;
-		//constantly replaces all of them
-		/*
-		//how to know which vertices attach to which joints? can't do all of them... 
-		for each joint attachment i of current vertex{						
-		}*/
+	
 	}
 	//v' = weight1(Matrix1 *v) 
 	// where Matrix1 = jointWorld1 * Binding1.inverse()

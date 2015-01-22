@@ -124,7 +124,7 @@ void Tester::Draw() {
 	//Cube.Draw();
 	skeleton.draw(); 
 	
-	//skin.draw();
+	skin.draw();
 	// Finish drawing scene
 	glFinish();
 	glutSwapBuffers();

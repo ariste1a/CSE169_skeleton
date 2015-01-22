@@ -41,4 +41,5 @@ void Skeleton::update()
 }
 Skeleton::~Skeleton()
 {
+
 }
