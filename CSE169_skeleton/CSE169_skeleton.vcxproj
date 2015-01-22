@@ -91,6 +91,7 @@
     <ClInclude Include="pose.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="skin.h" />
+    <ClInclude Include="skinweight.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\camera.cpp" />
@@ -106,6 +107,7 @@
     <ClCompile Include="pose.cpp" />
     <ClCompile Include="Skeleton.cpp" />
     <ClCompile Include="skin.cpp" />
+    <ClCompile Include="skinweight.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

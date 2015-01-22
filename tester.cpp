@@ -95,7 +95,7 @@ void Tester::Update() {
 	Cam.Update();
 	Cube.Update();
 	skeleton.update();
-	//skin.update(&this->skeleton);
+	skin.update(&this->skeleton);
 	// Tell glut to re-display the scene
 	glutSetWindow(WindowHandle);
 	glutPostRedisplay();

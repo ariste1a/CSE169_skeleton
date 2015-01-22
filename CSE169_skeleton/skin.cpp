@@ -41,15 +41,17 @@ bool skin::load(const char *file)
 	token.FindToken("{");
 	for (int i = 0; i < positions; i++)
 	{
-
 		int numAttachments = token.GetFloat();
 		skinweight *skinWeight = new skinweight(); 
+		skinWeight->numAttachments = numAttachments; 
 		for (int i = 0; i < numAttachments; i++)
 		{
 			int jointNum = token.GetInt(); 
 			float weightVal = token.GetFloat(); 
 			skinWeight->jointWeightPair.push_back(new std::pair<int, float>(jointNum, weightVal));
-		}				
+		}		
+		this->skinWeights.push_back(skinWeight);
+
 	}
 	
 	token.FindToken("triangles");
@@ -151,6 +153,7 @@ void skin::update(Skeleton* skel)
 	for (int i = 0; i < skel->joints.size(); i++)
 	{
 		Matrix34 *newMtx = new Matrix34(); 
+		//newMtx->Dot(*skel->joints[i]->getWorldMatrix(), *bindings[i]);
 		newMtx->Dot(*skel->joints[i]->getWorldMatrix(), *bindings[i]);
 		newMatrices->push_back(newMtx);
 	}
@@ -160,10 +163,23 @@ void skin::update(Skeleton* skel)
 	{
 		Vector3 *tempVector = new Vector3(); 
 		Matrix34 *tempNormal = new Matrix34(); 
-		for (int j = 0; j < newMatrices->size(); j++)
+		skinweight *currWeight = this->skinWeights[i];	//BREAKS HERE IF UPDATES?!	
+		for (int j = 0; j < currWeight->numAttachments; j++)
 		{
-		
+			int currJoint = currWeight->jointWeightPair[j]->first;
+			float currWeightVal = currWeight->jointWeightPair[j]->second; 
+
+			Vector3 skinXpos = *new Vector3();
+			skinXpos = currWeightVal* (*(positions)[i]); 
+			
+			Vector3 *newVec = new Vector3();
+			(*newMatrices)[currJoint]->Transform(skinXpos, *newVec); //WiMi
+			tempVector = &(*tempVector + *newVec);
+
+			//tempVector = tempVector + (currWeightVal)* *(positions[i]) * newMatrices[i]; 
 		}
+		//posPrime[i] = tempVector; //now converging to 0... 
+		*(posPrime[i]) = *tempVector;
 	
 	}
 	//v' = weight1(Matrix1 *v) 
