@@ -15,6 +15,7 @@ public:
 	std::vector<Vector3*> positions; 
 	std::vector<Vector3*> posPrime;
 	std::vector<Vector3*> normals;
+	std::vector<Vector3*> normalsPrime; 
 	std::vector<skinweight*> skinWeights;
 	std::vector<Vector3*> triangles;
 	std::vector<Matrix34*> bindings;	

@@ -15,7 +15,7 @@ bool Skeleton::load(const char *file)
 	this->setRoot(root); 
 	this->getRoot()->load(token);
 	// Finish
-	token.Close();
+	token.Close();	
 	return true;
 }
 

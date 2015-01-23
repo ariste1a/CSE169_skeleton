@@ -10,7 +10,7 @@
 class joint
 {
 private: 	
-	Matrix34 *local; 
+	Matrix34 *local;
 	Matrix34 *world;
 	std::vector<DOF*> dofs;
 	joint *parent;	

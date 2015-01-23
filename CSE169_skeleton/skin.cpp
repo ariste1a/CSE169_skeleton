@@ -33,9 +33,9 @@ bool skin::load(const char *file)
 		float y = token.GetFloat();
 		float z = token.GetFloat();
 		this->normals.push_back(new Vector3(x, y, z));
+		this->normalsPrime.push_back(new Vector3(x, y, z));
 	}
-
-	/* NEED TO REDO*/
+	
 	token.FindToken("skinweights");
 	positions = token.GetInt();
 	token.FindToken("{");
@@ -88,7 +88,7 @@ bool skin::load(const char *file)
 		Matrix34 *matrix = new Matrix34(ax, bx, cx, dx,
 			ay, by, cy, dy,
 			az, bz, cz, dz);
-		matrix->Inverse();
+		matrix->FastInverse();
 		this->bindings.push_back(matrix); 
 		//might be row major
 	}	 
@@ -100,17 +100,6 @@ bool skin::load(const char *file)
 //change this into just draw
 void skin::draw()
 {
-	//need to attach all of these to their respective joints... 
-	//for each joint draw this thingy? or no?
-
-
-	/*glBegin(GL_TRIANGLES);
-	glColor3f(0.1, 0.2, 0.3);
-	glVertex3f(0, 0, 0);
-	glVertex3f(1, 0, 0);
-	glVertex3f(0, 1, 100);
-	glEnd();
-	*/
 	//wtf are you supposed to use the triangles for?
 	//use each vertex as a vertex for the triangles. 
 	glBegin(GL_TRIANGLES);
@@ -124,9 +113,9 @@ void skin::draw()
 		Vector3 tri1 = *posPrime[triangle.y];
 		Vector3 tri2 = *posPrime[triangle.z];
 		  
-		Vector3 norm = *normals[triangle.x];
-		Vector3 norm1 = *normals[triangle.y];
-		Vector3 norm2 = *normals[triangle.z];
+		Vector3 norm = *normalsPrime[triangle.x];
+		Vector3 norm1 = *normalsPrime[triangle.y];
+		Vector3 norm2 = *normalsPrime[triangle.z];
 
 		glColor3f(1.f, 0.f, 0.f);
 		glNormal3f(norm.x, norm.y, norm.z);
@@ -149,41 +138,55 @@ void skin::update(Skeleton* skel)
 	this->skel = skel; 
 	//foreach joint claculate M= W*B^-1....B is already inversed during parsing
 	//each joint's # should correspond to the binding matrix order
-	std::vector<Matrix34*> *newMatrices = new std::vector<Matrix34*>();
+	std::vector<Matrix34*> newMatrices = *new std::vector<Matrix34*>();
 	for (int i = 0; i < skel->joints.size(); i++)
 	{
 		Matrix34 *newMtx = new Matrix34(); 
-		//newMtx->Dot(*skel->joints[i]->getWorldMatrix(), *bindings[i]);
 		newMtx->Dot(*skel->joints[i]->getWorldMatrix(), *bindings[i]);
-		newMatrices->push_back(newMtx);
+		//newMtx->Dot(*bindings[i], *skel->joints[i]->getWorldMatrix());
+		newMatrices.push_back(newMtx);
 	}
 
 	//need to fix updating the same set of position vectors will blow it up. need to only do the update "once" 
 	for (int i = 0; i < positions.size(); i++)
 	{
 		Vector3 *tempVector = new Vector3(); 
-		Matrix34 *tempNormal = new Matrix34(); 
-		skinweight *currWeight = this->skinWeights[i];	//BREAKS HERE IF UPDATES?!	
+		Vector3 *tempNormal = new Vector3(); 
+		skinweight *currWeight = this->skinWeights[i];	
 		for (int j = 0; j < currWeight->numAttachments; j++)
 		{
 			int currJoint = currWeight->jointWeightPair[j]->first;
 			float currWeightVal = currWeight->jointWeightPair[j]->second; 
-
-			Vector3 skinXpos = *new Vector3();
-			skinXpos = currWeightVal* (*(positions)[i]); 
-			
+					
 			Vector3 *newVec = new Vector3();
-			(*newMatrices)[currJoint]->Transform(skinXpos, *newVec); //WiMi
-			tempVector = &(*tempVector + *newVec);
-
+			newMatrices[currJoint]->Transform((*(positions)[i]), *newVec); //WiMi			
+			*newVec = currWeightVal* (*newVec);
+			tempVector = &(*tempVector + *newVec); 
 			//tempVector = tempVector + (currWeightVal)* *(positions[i]) * newMatrices[i]; 
+			delete newVec; 
+
+			//normals 
+			
+			newVec = new Vector3(); 
+			newMatrices[currJoint]->Transform3x3((*(normals)[i]), *newVec); //WiMi			
+			*newVec = currWeightVal* (*newVec);
+			tempNormal = &(*tempVector + *newVec);
+			delete newVec;  
 		}
-		//posPrime[i] = tempVector; //now converging to 0... 
-		*(posPrime[i]) = *tempVector;
-	
+		 
+		//delete;  tempVector
+		*(posPrime[i]) = *tempVector;	
+		tempNormal->Normalize(); 
+		*(normalsPrime[i]) = *tempNormal;
+		//	delete tempNormal;
 	}
-	//v' = weight1(Matrix1 *v) 
-	// where Matrix1 = jointWorld1 * Binding1.inverse()
+	for (auto it = newMatrices.begin(); it != newMatrices.end(); ++it){
+		delete *it;
+	}
+	newMatrices.clear(); 
+	//delete &newMatrices;
+	
+	//v' = weight1(Matrix1 *v) 	
 	//Loop through vertices and compute blended position & normal
 
 }
@@ -196,4 +199,10 @@ normals
 
 skin::~skin()
 {
+	delete &positions;
+	delete &posPrime;
+	delete &normals;
+	delete &skinWeights;
+	delete &triangles;
+	delete &bindings;
 }

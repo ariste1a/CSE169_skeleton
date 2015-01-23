@@ -4,7 +4,7 @@
 
 #include "tester.h"
 #include <iostream>
-#define WINDOWTITLE	"Spinning Cube"
+#define WINDOWTITLE	"EL PSY CONGROO"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -13,7 +13,7 @@ static Tester *TESTER;
 int main(int argc, char **argv) {
 	glutInit(&argc, argv);
 	TESTER = new Tester(argc,argv);
-	glutMainLoop();
+	glutMainLoop();	
 	return 0;
 }
 
@@ -55,11 +55,15 @@ Tester::Tester(int argc,char **argv) {
 
 
 	// Create the window
-	glutInitDisplayMode( GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH );
+	glutInitDisplayMode( GLUT_RGBA| GLUT_DOUBLE | GLUT_DEPTH );
 	glutInitWindowSize( WinX, WinY );
 	glutInitWindowPosition( 0, 0 );
 	WindowHandle = glutCreateWindow( WINDOWTITLE );
 	glutSetWindowTitle( WINDOWTITLE );
+	glEnable(GL_LIGHTING);
+	glEnable(GL_COLOR_MATERIAL);
+	glEnable(GL_LIGHT0);
+	glDisable(GL_CULL_FACE);
 	glutSetWindow( WindowHandle );
 
 	// Background color
@@ -78,7 +82,7 @@ Tester::Tester(int argc,char **argv) {
 
 	// Initialize components
 
-	Cam.SetAspect(float(WinX)/float(WinY));
+	Cam.SetAspect(float(WinX)/float(WinY));	
 }
 
 ////////////////////////////////////////////////////////////////////////////////
