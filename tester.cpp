@@ -65,9 +65,15 @@ Tester::Tester(int argc,char **argv) {
 	glEnable(GL_LIGHT0);
 	glDisable(GL_CULL_FACE);
 	glutSetWindow( WindowHandle );
+	
+	//ok works
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
+	glDepthFunc(GL_LEQUAL);
+	glDepthRange(0.0f, 1.0f);
 
 	// Background color
-	glClearColor( 0., 0., 0., 1. );
+	glClearColor( 0., 0., 0., 1. );	
 
 	// Callbacks
 	glutDisplayFunc( display );
@@ -122,7 +128,7 @@ void Tester::Draw() {
 	glViewport(0, 0, WinX, WinY);
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+	
 	// Draw components
 	Cam.Draw();		// Sets up projection & viewing matrices
 	//Cube.Draw();

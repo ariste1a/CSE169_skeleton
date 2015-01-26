@@ -159,9 +159,9 @@ void skin::update(Skeleton* skel)
 			float currWeightVal = currWeight->jointWeightPair[j]->second; 
 					
 			Vector3 *newVec = new Vector3();
-			newMatrices[currJoint]->Transform((*(positions)[i]), *newVec); //WiMi			
+			newMatrices[currJoint]->Transform((*positions[i]), *newVec); //WiMi			
 			*newVec = currWeightVal* (*newVec);
-			tempVector = &(*tempVector + *newVec); 
+			tempVector = &(*tempVector + *newVec);
 			//tempVector = tempVector + (currWeightVal)* *(positions[i]) * newMatrices[i]; 
 			delete newVec; 
 
@@ -173,7 +173,7 @@ void skin::update(Skeleton* skel)
 			tempNormal = &(*tempVector + *newVec);
 			delete newVec;  
 		}
-		 
+		  
 		//delete;  tempVector
 		*(posPrime[i]) = *tempVector;	
 		tempNormal->Normalize(); 
