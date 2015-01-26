@@ -163,7 +163,7 @@ Matrix34 joint::computeLocalWithPose()
 
 	Matrix34 rot = doPose(); 
 	local->Dot(*trans, rot); //don't pose until AFTER skinning 
-	delete trans; 	
+	delete trans;
 	return *local;
 }
 
@@ -255,4 +255,47 @@ joint::~joint()
 	delete local; 
 	delete parent; 
 	delete &children; 
+}
+
+void joint::changeDOF(int dof, float deg)
+{	
+	if (dof == 1)
+	{
+		pose.x = deg; 
+	}
+	else if (dof == 2)
+	{
+		pose.y = deg; 
+	}
+	else if (dof == 3)
+	{
+		pose.z = deg; 
+	}
+
+	if (pose.x > rotxlimit.getMax())
+	{
+		pose.x = rotxlimit.getMax();
+	}
+	else if (pose.x < rotxlimit.getMin())
+	{
+		pose.x = rotxlimit.getMin();
+	}
+
+	if (pose.y > rotylimit.getMax())
+	{
+		pose.y = rotylimit.getMax();
+	}
+	else if (pose.y < rotylimit.getMin())
+	{
+		pose.y = rotylimit.getMin();
+	}
+
+	if (pose.z > rotzlimit.getMax())
+	{
+		pose.z = rotzlimit.getMax();
+	}
+	else if (pose.z < rotzlimit.getMin())
+	{
+		pose.z = rotzlimit.getMin();
+	}
 }

@@ -22,6 +22,7 @@ public:
 	void setRoot(joint*); 
 	Offset offset; 
 	std::vector<joint*> joints; 
+	int selectedJoint = 0; 	
 	~Skeleton();
 };
 

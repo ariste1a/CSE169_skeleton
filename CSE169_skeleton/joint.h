@@ -22,7 +22,7 @@ private:
 	DOF rotxlimit;
 	DOF rotylimit;
 	DOF rotzlimit;
-	Vector3 pose = *(new Vector3(0,0,0));	
+	Vector3 pose = *(new Vector3(0,0,0));
 	
 public:		
 	joint();
@@ -53,7 +53,11 @@ public:
 	//if want to 
 	//virtual void MakeLocalMatrix();
 	void joint::traverse(std::vector<joint*>* joints);
-	Matrix34* getWorldMatrix(); 
+	Matrix34* getWorldMatrix();
+	void joint::changeDOF(int dof, float deg); 
+	float dofX = 0; 
+	float dofY = 0; 
+	float dofZ = 0; 
 	~joint();
 };
 

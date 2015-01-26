@@ -61,16 +61,36 @@ Tester::Tester(int argc,char **argv) {
 	WindowHandle = glutCreateWindow( WINDOWTITLE );
 	glutSetWindowTitle( WINDOWTITLE );
 	glEnable(GL_LIGHTING);
-	glEnable(GL_COLOR_MATERIAL);
+	//glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_LIGHT0);
-	glDisable(GL_CULL_FACE);
+	glEnable(GL_LIGHT1);
+	glEnable(GL_CULL_FACE);
+
+	GLfloat light0_diffuse[] = { 1, 1.0, 0, 1.0 };
+
+	GLfloat light1_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
+	GLfloat light1_diffuse[] = { 0, 1.0, 1.0, 1.0 };	
+	GLfloat light1_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat light1_position[] = { -2.0, 2.0, 1.0, 1.0 };
+	GLfloat spot_direction[] = { -1.0, -1.0, 0.0 };
+
+	glLightfv(GL_LIGHT1, GL_AMBIENT, light1_ambient);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_diffuse);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, light1_specular);
+	glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
+
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
+	GLfloat lightpos[] = { 3, 2, 5, 1 };
+	glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
+
+	GLfloat lightpos2[] = { -3, 2, -5, 1 };
+	glLightfv(GL_LIGHT1, GL_POSITION, lightpos2);
+
+
 	glutSetWindow( WindowHandle );
-	
+
 	//ok works
-	glEnable(GL_DEPTH_TEST);
-	glDepthMask(GL_TRUE);
-	glDepthFunc(GL_LEQUAL);
-	glDepthRange(0.0f, 1.0f);
+	glEnable(GL_DEPTH_TEST);	
 
 	// Background color
 	glClearColor( 0., 0., 0., 1. );	
@@ -132,8 +152,9 @@ void Tester::Draw() {
 	// Draw components
 	Cam.Draw();		// Sets up projection & viewing matrices
 	//Cube.Draw();
-	skeleton.draw(); 
-	
+	//skeleton.draw(); 
+	glLoadIdentity();
+
 	skin.draw();
 	// Finish drawing scene
 	glFinish();
@@ -165,6 +186,53 @@ void Tester::Keyboard(int key,int x,int y) {
 			break;
 		case 'r':
 			Reset();
+			break;
+		case 'q':
+			skeleton.selectedJoint--;
+			if (skeleton.selectedJoint < 0)
+			{
+				skeleton.selectedJoint = skeleton.joints.size() - 1;
+			}
+			currJoint = skeleton.joints[skeleton.selectedJoint];
+			break;
+
+		case  'e':
+			skeleton.selectedJoint++;
+			if (skeleton.selectedJoint >= skeleton.joints.size())
+			{
+				skeleton.selectedJoint = 0;
+			}
+			currJoint = skeleton.joints[skeleton.selectedJoint];
+			break;
+		case 'w':
+			if (currJoint == 0)
+				currJoint = skeleton.joints[0];
+			currJoint->changeDOF(1, currJoint->dofX += 0.01);
+			break;
+		case 's':
+			if (currJoint == 0)
+				currJoint = skeleton.joints[0];
+			currJoint->changeDOF(1, currJoint->dofX -= 0.01);
+			break;
+		case 'a':
+			if (currJoint == 0)
+				currJoint = skeleton.joints[0];
+			currJoint->changeDOF(1, currJoint->dofY -= 0.01);
+			break;
+		case 'd':
+			if (currJoint == 0)
+				currJoint = skeleton.joints[0];
+			currJoint->changeDOF(1, currJoint->dofY += 0.01);
+			break;
+		case 'r':
+			if (currJoint == 0)
+				currJoint = skeleton.joints[0];
+			currJoint->changeDOF(1, currJoint->dofZ += 0.01);
+			break;
+		case 'f':
+			if (currJoint == 0)
+				currJoint = skeleton.joints[0];
+			currJoint->changeDOF(1, currJoint->dofZ += 0.01);
 			break;
 	}
 }

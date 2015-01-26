@@ -102,6 +102,13 @@ void skin::draw()
 {
 	//wtf are you supposed to use the triangles for?
 	//use each vertex as a vertex for the triangles. 
+	//glLoadIdentity();
+	GLfloat cyan[] = { 0.f, .8f, .8f, 1.f };
+	GLfloat white[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+	GLfloat shiny[] = { 50.f };
+	//glMaterialfv(GL_FRONT, GL_DIFFUSE, cyan);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, white);
+	glMaterialfv(GL_FRONT, GL_SHININESS, shiny);
 	glBegin(GL_TRIANGLES);
 	//these are the positions....not the actual triangles....
 	//and need the normals
@@ -116,8 +123,7 @@ void skin::draw()
 		Vector3 norm = *normalsPrime[triangle.x];
 		Vector3 norm1 = *normalsPrime[triangle.y];
 		Vector3 norm2 = *normalsPrime[triangle.z];
-
-		glColor3f(1.f, 0.f, 0.f);
+		
 		glNormal3f(norm.x, norm.y, norm.z);
 		glVertex3f(tri.x, tri.y, tri.z); 
 		glNormal3f(norm1.x, norm1.y, norm1.z);
