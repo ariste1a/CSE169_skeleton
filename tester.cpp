@@ -207,6 +207,7 @@ void Tester::Keyboard(int key,int x,int y) {
 		case 'w':
 			if (currJoint == 0)
 				currJoint = skeleton.joints[0];
+			std::cout << currJoint << std::endl;
 			currJoint->changeDOF(1, currJoint->dofX += 0.01);
 			break;
 		case 's':
@@ -217,22 +218,22 @@ void Tester::Keyboard(int key,int x,int y) {
 		case 'a':
 			if (currJoint == 0)
 				currJoint = skeleton.joints[0];
-			currJoint->changeDOF(1, currJoint->dofY -= 0.01);
+			currJoint->changeDOF(2, currJoint->dofY -= 0.01);
 			break;
 		case 'd':
 			if (currJoint == 0)
 				currJoint = skeleton.joints[0];
-			currJoint->changeDOF(1, currJoint->dofY += 0.01);
+			currJoint->changeDOF(2, currJoint->dofY += 0.01);
 			break;
-		case 'r':
+		case 'z':
 			if (currJoint == 0)
 				currJoint = skeleton.joints[0];
-			currJoint->changeDOF(1, currJoint->dofZ += 0.01);
+			currJoint->changeDOF(3, currJoint->dofZ -= 0.01);
 			break;
-		case 'f':
+		case 'x':
 			if (currJoint == 0)
 				currJoint = skeleton.joints[0];
-			currJoint->changeDOF(1, currJoint->dofZ += 0.01);
+			currJoint->changeDOF(3, currJoint->dofZ += 0.01);
 			break;
 	}
 }

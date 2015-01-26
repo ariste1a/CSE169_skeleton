@@ -44,7 +44,7 @@ private:
 	SpinningCube Cube;
 	Skeleton skeleton;
 	skin skin; 
-	joint *currJoint;
+	joint *currJoint = 0; 
 };
 
 ////////////////////////////////////////////////////////////////////////////////
