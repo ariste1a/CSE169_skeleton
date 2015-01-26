@@ -194,6 +194,7 @@ void Tester::Keyboard(int key,int x,int y) {
 				skeleton.selectedJoint = skeleton.joints.size() - 1;
 			}
 			currJoint = skeleton.joints[skeleton.selectedJoint];
+			std::cout << "SELECTED JOINT: " << currJoint->getName() << std::endl;
 			break;
 
 		case  'e':
@@ -203,11 +204,11 @@ void Tester::Keyboard(int key,int x,int y) {
 				skeleton.selectedJoint = 0;
 			}
 			currJoint = skeleton.joints[skeleton.selectedJoint];
+			std::cout << "SELECTED JOINT: " << currJoint->getName() << std::endl;
 			break;
 		case 'w':
 			if (currJoint == 0)
-				currJoint = skeleton.joints[0];
-			std::cout << currJoint << std::endl;
+				currJoint = skeleton.joints[0];			
 			currJoint->changeDOF(1, currJoint->dofX += 0.01);
 			break;
 		case 's':
