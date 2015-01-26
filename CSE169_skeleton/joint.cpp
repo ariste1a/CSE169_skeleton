@@ -57,6 +57,9 @@ bool joint::load(Tokenizer &tokenizer)
 			pose[0] = tokenizer.GetFloat(); 
 			pose[1] = tokenizer.GetFloat();
 			pose[2] = tokenizer.GetFloat();
+			dofX = pose[0];
+			dofY = pose[1]; 
+			dofZ = pose[2]; 
 		}
 		if (strcmp(temp, "balljoint") == 0) {
 					joint *jnt = new joint;					
@@ -214,7 +217,6 @@ Matrix34 joint::doPose()
 	}
 	else if (pose.x < rotxlimit.getMin())
 	{
-
 		pose.x = rotxlimit.getMin();
 	}
 
