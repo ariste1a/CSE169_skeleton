@@ -94,6 +94,7 @@
     <ClInclude Include="skinweight.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\bmploader.cpp" />
     <ClCompile Include="..\camera.cpp" />
     <ClCompile Include="..\core.cpp" />
     <ClCompile Include="..\cube.cpp" />
