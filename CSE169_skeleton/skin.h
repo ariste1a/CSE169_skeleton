@@ -19,6 +19,7 @@ public:
 	std::vector<skinweight*> skinWeights;
 	std::vector<Vector3*> triangles;
 	std::vector<Matrix34*> bindings;	
+	std::vector<Vector3*> texcoords; 
 	Skeleton *skel; 
 	void bind(Skeleton* skel);
 	void skin::draw();

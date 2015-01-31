@@ -36,6 +36,23 @@ bool skin::load(const char *file)
 		this->normalsPrime.push_back(new Vector3(x, y, z));
 	}
 	
+	//if the file contain texture coordinates. 
+	if (token.FindToken("texcoords") == true){
+		positions = token.GetInt();
+		token.FindToken("{");
+		for (int i = 0; i < positions; i++)
+		{
+			float x = token.GetFloat();
+			float y = token.GetFloat();
+			float z = 0; 
+			this->texcoords.push_back(new Vector3(x, y, z));			
+		}
+	}
+	else{
+		token.Reset();
+	}
+
+
 	token.FindToken("skinweights");
 	positions = token.GetInt();
 	token.FindToken("{");
@@ -124,10 +141,19 @@ void skin::draw()
 		Vector3 norm1 = *normalsPrime[triangle.y];
 		Vector3 norm2 = *normalsPrime[triangle.z];
 		
+		Vector3 tex = *texcoords[triangle.x]; 
+		Vector3 tex1 = *texcoords[triangle.y];
+		Vector3 tex2 = *texcoords[triangle.z];
+
+		glTexCoord2f(tex.x, tex.y);
 		glNormal3f(norm.x, norm.y, norm.z);
 		glVertex3f(tri.x, tri.y, tri.z); 
+		
+		glTexCoord2f(tex1.x, tex1.y);
 		glNormal3f(norm1.x, norm1.y, norm1.z);
 		glVertex3f(tri1.x, tri1.y, tri1.z);
+		
+		glTexCoord2f(tex2.x, tex2.y);
 		glNormal3f(norm2.x, norm2.y, norm2.z);
 		glVertex3f(tri2.x, tri2.y, tri2.z);
 

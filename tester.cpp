@@ -183,7 +183,7 @@ void Tester::Keyboard(int key,int x,int y) {
 	switch(key) {
 		case 0x1b:		// Escape
 			Quit();
-			break;
+			break;  
 		case 'r':
 			Reset();
 			break;
