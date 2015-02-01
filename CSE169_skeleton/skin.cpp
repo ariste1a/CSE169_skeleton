@@ -21,8 +21,8 @@ bool skin::loadMorph(const char * file)
 		float y = token.GetFloat();
 		float z = token.GetFloat();
 		this->positions[index]->x = x;
-		this->positions[index]->x = y;
-		this->positions[index]->x = z;
+		this->positions[index]->y = y;
+		this->positions[index]->z = z;
 	}
 
 	token.FindToken("normals");
@@ -35,9 +35,10 @@ bool skin::loadMorph(const char * file)
 		float y = token.GetFloat();
 		float z = token.GetFloat();
 		this->normals[index]->x = x;
-		this->normals[index]->x = y;
-		this->normals[index]->x = z;
+		this->normals[index]->y = y;
+		this->normals[index]->z = z;
 	}
+	token.Close();
 	return true;
 }
 bool skin::load(const char *file)

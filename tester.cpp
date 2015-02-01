@@ -34,12 +34,22 @@ Tester::Tester(int argc,char **argv) {
 	WinY=480;
 	LeftDown=MiddleDown=RightDown=false;
 	MouseX=MouseY=0;
-
+	std::cout << argc << std::endl;
 	//loading skeleton and skin
 	std::cout << argv[1] << std::endl; 
 	this->skeleton = *(new Skeleton()); 
 	skeleton.load(argv[1]); 
 	this->skin.load(argv[2]);
+
+	if (argc > 3)
+	{
+		this->skin.loadMorph(argv[3]);
+	}
+	if (argc > 4)
+	{
+		this->skin.loadMorph(argv[4]);
+	}
+
 	this->skin.skel = &this->skeleton; 
 	std::cout << std::endl;	
 	
@@ -51,8 +61,6 @@ Tester::Tester(int argc,char **argv) {
 	this->skeleton.getRoot()->traverse(joints);
 	std::cout << joints->size() << std::endl;
 	this->skeleton.joints = *joints;
-
-
 
 	// Create the window
 	glutInitDisplayMode( GLUT_RGBA| GLUT_DOUBLE | GLUT_DEPTH );
@@ -108,6 +116,7 @@ Tester::Tester(int argc,char **argv) {
 	// Initialize components
 
 	Cam.SetAspect(float(WinX)/float(WinY));	
+	if (this->skin.texcoords.size() >0)
 	this->skin.textureLoader.LoadGLTextures(skin.texName.c_str());
 }
 
