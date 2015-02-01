@@ -61,11 +61,12 @@ Tester::Tester(int argc,char **argv) {
 	WindowHandle = glutCreateWindow( WINDOWTITLE );
 	glutSetWindowTitle( WINDOWTITLE );
 	glEnable(GL_LIGHTING);
+	glDisable(GL_BLEND);
 	//glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_LIGHT1);
 	glEnable(GL_CULL_FACE);
-
+	glEnable(GL_TEXTURE_2D);
 	GLfloat light0_diffuse[] = { 1, 1.0, 0, 1.0 };
 
 	GLfloat light1_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
@@ -104,11 +105,10 @@ Tester::Tester(int argc,char **argv) {
 	glutPassiveMotionFunc( mousemotion );
 	glutReshapeFunc( resize );
 
-
-
 	// Initialize components
 
 	Cam.SetAspect(float(WinX)/float(WinY));	
+	this->skin.textureLoader.LoadGLTextures(skin.texName.c_str());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -154,7 +154,7 @@ void Tester::Draw() {
 	//Cube.Draw();
 	//skeleton.draw(); 
 	glLoadIdentity();
-
+	
 	skin.draw();
 	// Finish drawing scene
 	glFinish();

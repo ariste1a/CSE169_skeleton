@@ -1,21 +1,5 @@
-
-// storage for one texture
-GLuint texture[1];
-
-class BMPImage
-{
-public:
-    ~BMPImage ()
-    {
-        delete [] data;
-    }
-    
-    bool load (char* filename);
-
-    unsigned long sizeX;
-    unsigned long sizeY;
-    char *data;
-};
+#include "CSE169_skeleton\BMPImage.h"
+// storage for one 
 
 //
 // uncomment the MAC_OS define below if you are compiling on a Mac
@@ -56,7 +40,7 @@ void swapFourBytes (unsigned long* dw) {}
 //
 // Wojciech Jarosz (02/02/06) - Ported to big-endian systems (MacOS).
 //
-bool BMPImage::load (char *filename)
+bool BMPImage::load (const char *filename)
 {
     FILE *fp;
     unsigned long size;           // size of the image in bytes.
@@ -154,19 +138,33 @@ bool BMPImage::load (char *filename)
 
 
 // Load Bitmaps And Convert To Textures
-void LoadGLTextures ()
+void BMPImage::LoadGLTextures(const char *filename)
 {
     // Load Texture
     BMPImage image1;
 
-    if (!image1.load ("your_bitmap_file_here.bmp"))
+    if (!image1.load (filename))
         exit (1);
 
     // Create Texture
+	/*
     glGenTextures (1, &texture[0]);
     glBindTexture (GL_TEXTURE_2D, texture[0]);
-
+	
     // note that BMP images store their data in BRG order, not RGB
-    glTexImage2D (GL_TEXTURE_2D, 0, 3, image1.sizeX, image1.sizeY, 0, GL_BGR,
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, image1.sizeX, image1.sizeY, 0, GL_BGR_EXT,
                   GL_UNSIGNED_BYTE, image1.data);
+	
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);	
+	*/
+	// Create Texture
+	glGenTextures(1, &texture[0]);
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	// note that BMP images store their data in BRG order, not RGB
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, image1.sizeX, image1.sizeY, 0, GL_BGR_EXT,
+		GL_UNSIGNED_BYTE, image1.data);
 };

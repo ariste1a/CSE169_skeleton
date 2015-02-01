@@ -17,7 +17,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-
+#include <iostream>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>

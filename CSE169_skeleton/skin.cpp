@@ -5,7 +5,41 @@ skin::skin()
 {	
 }
 
+bool skin::loadMorph(const char * file)
+{
+	Tokenizer token = *(new Tokenizer());
+	token.Open(file);
+	char name[256];
+	token.FindToken("position");
+	token.GetChar();
+	int positions = token.GetInt();
+	token.FindToken("{");
+	for (int i = 0; i < positions; i++)
+	{
+		int index = token.GetInt();
+		float x = token.GetFloat();
+		float y = token.GetFloat();
+		float z = token.GetFloat();
+		this->positions[index]->x = x;
+		this->positions[index]->x = y;
+		this->positions[index]->x = z;
+	}
 
+	token.FindToken("normals");
+	positions = token.GetInt();
+	token.FindToken("{");
+	for (int i = 0; i < positions; i++)
+	{
+		int index = token.GetInt();
+		float x = token.GetFloat();
+		float y = token.GetFloat();
+		float z = token.GetFloat();
+		this->normals[index]->x = x;
+		this->normals[index]->x = y;
+		this->normals[index]->x = z;
+	}
+	return true;
+}
 bool skin::load(const char *file)
 {
 	Tokenizer token = *(new Tokenizer());
@@ -71,6 +105,18 @@ bool skin::load(const char *file)
 
 	}
 	
+	if (token.FindToken("material") == true){
+		token.FindToken("{");
+		char name[256];
+		token.GetToken(name);
+		token.GetToken(name);
+		this->texName = name;
+		std::cout << "TEXTURE NAME " << texName << std::endl;
+	}
+	else{
+		token.Reset();
+	}
+
 	token.FindToken("triangles");
 	positions = token.GetInt();
 	token.FindToken("{");
@@ -106,9 +152,9 @@ bool skin::load(const char *file)
 			ay, by, cy, dy,
 			az, bz, cz, dz);
 		matrix->FastInverse();
-		this->bindings.push_back(matrix); 
+		this->bindings.push_back(matrix);
 		//might be row major
-	}	 
+	}
 	token.Close();
 	return true; 
 }
@@ -123,10 +169,14 @@ void skin::draw()
 	GLfloat cyan[] = { 0.f, .8f, .8f, 1.f };
 	GLfloat white[] = { 0.8f, 0.8f, 0.8f, 1.0f };
 	GLfloat shiny[] = { 50.f };
-	//glMaterialfv(GL_FRONT, GL_DIFFUSE, cyan);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, cyan);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, white);
 	glMaterialfv(GL_FRONT, GL_SHININESS, shiny);
-	glBegin(GL_TRIANGLES);
+
+	glEnable(GL_TEXTURE_2D);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+	glBindTexture(GL_TEXTURE_2D, this->textureLoader.texture[0]);
+	glBegin(GL_TRIANGLES);	
 	//these are the positions....not the actual triangles....
 	//and need the normals
 	for (int i = 0; i < this->triangles.size(); i++)
@@ -136,14 +186,24 @@ void skin::draw()
 		Vector3 tri = *posPrime[triangle.x];
 		Vector3 tri1 = *posPrime[triangle.y];
 		Vector3 tri2 = *posPrime[triangle.z];
-		  
+		
 		Vector3 norm = *normalsPrime[triangle.x];
 		Vector3 norm1 = *normalsPrime[triangle.y];
 		Vector3 norm2 = *normalsPrime[triangle.z];
 		
-		Vector3 tex = *texcoords[triangle.x]; 
-		Vector3 tex1 = *texcoords[triangle.y];
-		Vector3 tex2 = *texcoords[triangle.z];
+	
+		Vector3 tex;
+		Vector3 tex1; 
+		Vector3 tex2;
+
+		if (texcoords.size() > 0)
+		{
+			tex = *texcoords[triangle.x];
+			tex1 = *texcoords[triangle.y];
+			tex2 = *texcoords[triangle.z];
+		}
+
+		//if		
 
 		glTexCoord2f(tex.x, tex.y);
 		glNormal3f(norm.x, norm.y, norm.z);
@@ -156,12 +216,13 @@ void skin::draw()
 		glTexCoord2f(tex2.x, tex2.y);
 		glNormal3f(norm2.x, norm2.y, norm2.z);
 		glVertex3f(tri2.x, tri2.y, tri2.z);
-
+		
 		//......each of the triangle x y z corresponds to the position of each vert.....ie. 0 1 2, vert 0, vert 1, vert 2......
 		//call pose after. 	
 	}
 	glEnd();
-	
+	glDisable(GL_TEXTURE_2D);
+
 }
 
 //change this into update
@@ -215,6 +276,10 @@ void skin::update(Skeleton* skel)
 	for (auto it = newMatrices.begin(); it != newMatrices.end(); ++it){
 		delete *it;
 	}
+	for (auto it = positions.begin(); it != positions.end(); ++it){
+		delete *it;
+	}
+	positions.clear();
 	newMatrices.clear(); 
 	//delete &newMatrices;
 	

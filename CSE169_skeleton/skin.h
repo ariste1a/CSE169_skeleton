@@ -5,7 +5,7 @@
 #include "../matrix34.h"
 #include "Skeleton.h"
 #include "skinweight.h"
-
+#include "BMPImage.h"
 class skin
 {
 public:
@@ -24,6 +24,9 @@ public:
 	void bind(Skeleton* skel);
 	void skin::draw();
 	void skin::update(Skeleton* skel);
+	BMPImage textureLoader = *new BMPImage(); 
+	bool skin::loadMorph(const char * file);
+	std::string texName;
 	~skin();
 };
 

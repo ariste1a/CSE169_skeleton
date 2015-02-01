@@ -85,6 +85,7 @@
     <ClInclude Include="..\tester.h" />
     <ClInclude Include="..\token.h" />
     <ClInclude Include="..\vector3.h" />
+    <ClInclude Include="BMPImage.h" />
     <ClInclude Include="DOF.h" />
     <ClInclude Include="joint.h" />
     <ClInclude Include="Offset.h" />
