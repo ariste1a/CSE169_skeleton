@@ -43,6 +43,10 @@ bool skin::loadMorph(const char * file)
 }
 bool skin::load(const char *file)
 {
+	this->positions.clear();
+	this->posPrime.clear();
+	this->normals.clear();
+	this->normalsPrime.clear();
 	Tokenizer token = *(new Tokenizer());
 	token.Open(file);
 	char name[256];
@@ -259,8 +263,7 @@ void skin::update(Skeleton* skel)
 			//tempVector = tempVector + (currWeightVal)* *(positions[i]) * newMatrices[i]; 
 			delete newVec; 
 
-			//normals 
-			
+			//normals 			
 			newVec = new Vector3(); 
 			newMatrices[currJoint]->Transform3x3((*(normals)[i]), *newVec); //WiMi			
 			*newVec = currWeightVal* (*newVec);
@@ -277,10 +280,11 @@ void skin::update(Skeleton* skel)
 	for (auto it = newMatrices.begin(); it != newMatrices.end(); ++it){
 		delete *it;
 	}
+	/*
 	for (auto it = positions.begin(); it != positions.end(); ++it){
 		delete *it;
-	}
-	positions.clear();
+	}*/ 
+	//positions.clear();
 	newMatrices.clear(); 
 	//delete &newMatrices;
 	

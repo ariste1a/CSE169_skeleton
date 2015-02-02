@@ -40,17 +40,10 @@ Tester::Tester(int argc,char **argv) {
 	this->skeleton = *(new Skeleton()); 
 	skeleton.load(argv[1]); 
 	this->skin.load(argv[2]);
-
-	if (argc > 3)
-	{
-		this->skin.loadMorph(argv[3]);
-	}
-	if (argc > 4)
-	{
-		this->skin.loadMorph(argv[4]);
-	}
-
-	this->skin.skel = &this->skeleton; 
+	skinName = *new std::string(argv[2]);
+	this->skin.skel = &this->skeleton;
+	morph = *new std::string(argv[3]);
+	morph2 = *new std::string(argv[4]);
 	std::cout << std::endl;	
 	
 	//getting all the children
@@ -244,6 +237,19 @@ void Tester::Keyboard(int key,int x,int y) {
 			if (currJoint == 0)
 				currJoint = skeleton.joints[0];
 			currJoint->changeDOF(3, currJoint->dofZ += 0.01);
+			break;
+		case 'm':
+			toMorph = !toMorph; 
+			std::cout << toMorph << std::endl;
+			if (toMorph)
+			{				
+				this->skin.loadMorph(morph.c_str());							
+				this->skin.loadMorph(morph2.c_str());
+			}
+			else
+			{
+				this->skin.load(skinName.c_str());
+			}
 			break;
 	}
 }

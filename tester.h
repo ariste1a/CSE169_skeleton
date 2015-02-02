@@ -45,6 +45,10 @@ private:
 	Skeleton skeleton;
 	skin skin; 
 	joint *currJoint = 0; 
+	bool toMorph = false; 
+	std::string skinName; 
+	std::string morph;
+	std::string morph2;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
