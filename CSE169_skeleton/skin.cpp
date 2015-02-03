@@ -107,7 +107,6 @@ bool skin::load(const char *file)
 			skinWeight->jointWeightPair.push_back(new std::pair<int, float>(jointNum, weightVal));
 		}		
 		this->skinWeights.push_back(skinWeight);
-
 	}
 	
 	if (token.FindToken("material") == true){
@@ -160,7 +159,7 @@ bool skin::load(const char *file)
 		this->bindings.push_back(matrix);
 		//might be row major
 	}
-	token.Close();
+	token.Close();	
 	return true; 
 }
 
@@ -196,7 +195,6 @@ void skin::draw()
 		Vector3 norm1 = *normalsPrime[triangle.y];
 		Vector3 norm2 = *normalsPrime[triangle.z];
 		
-	
 		Vector3 tex;
 		Vector3 tex1; 
 		Vector3 tex2;
@@ -232,23 +230,25 @@ void skin::draw()
 //change this into update
 void skin::update(Skeleton* skel)
 {
-	this->skel = skel; 
+	this->skel = skel;
 	//foreach joint claculate M= W*B^-1....B is already inversed during parsing
 	//each joint's # should correspond to the binding matrix order
-	std::vector<Matrix34*> newMatrices = *new std::vector<Matrix34*>();
+	std::vector<Matrix34*> *newMatrices = new std::vector<Matrix34*>();
 	for (int i = 0; i < skel->joints.size(); i++)
 	{
 		Matrix34 *newMtx = new Matrix34(); 
 		newMtx->Dot(*skel->joints[i]->getWorldMatrix(), *bindings[i]);
 		//newMtx->Dot(*bindings[i], *skel->joints[i]->getWorldMatrix());
-		newMatrices.push_back(newMtx);
+		newMatrices->push_back(newMtx);
 	}
 
 	//need to fix updating the same set of position vectors will blow it up. need to only do the update "once" 
 	for (int i = 0; i < positions.size(); i++)
 	{
-		Vector3 *tempVector = new Vector3(); 
-		Vector3 *tempNormal = new Vector3(); 
+		Vector3 *tempVector = posPrime[i]; 
+		Vector3 *tempNormal = normalsPrime[i];
+		tempVector->Zero();
+		tempNormal->Zero();
 		skinweight *currWeight = this->skinWeights[i];	
 		for (int j = 0; j < currWeight->numAttachments; j++)
 		{
@@ -256,29 +256,25 @@ void skin::update(Skeleton* skel)
 			float currWeightVal = currWeight->jointWeightPair[j]->second; 
 					
 			Vector3 *newVec = new Vector3();
-			newMatrices[currJoint]->Transform((*positions[i]), *newVec); //WiMi			
+			(*newMatrices)[currJoint]->Transform((*positions[i]), *newVec); //WiMi			
 			*newVec = currWeightVal* (*newVec);
-			tempVector = &(*tempVector + *newVec);
+			*tempVector = *tempVector + *newVec;
 			//tempVector = tempVector + (currWeightVal)* *(positions[i]) * newMatrices[i]; 
 			delete newVec; 
 
 			//normals 			
 			newVec = new Vector3(); 
-			newMatrices[currJoint]->Transform3x3((*(normals)[i]), *newVec); //WiMi			
+			(*newMatrices)[currJoint]->Transform3x3((*(normals)[i]), *newVec); //WiMi			
 			*newVec = currWeightVal* (*newVec);
-			tempNormal = &(*tempVector + *newVec);
-			delete newVec;  
+			*tempNormal = *tempVector + *newVec;
+			delete newVec;
 		}
-		  
-		//delete;  tempVector		
-		*(posPrime[i]) = *new Vector3(tempVector->x, tempVector->y, tempVector->z);//*tempVector;	
-		
-		tempNormal->Normalize(); 
-		*(normalsPrime[i]) = *tempNormal;
-
-		//	delete tempNormal;
+		  	
+		//posPrime[i] = new Vector3(tempVector->x, tempVector->y, tempVector->z);	
+		normalsPrime[i]->Normalize();
+		//delete tempNormal;
 	}
-	for (auto it = newMatrices.begin(); it != newMatrices.end(); ++it){
+	for (auto it = newMatrices->begin(); it != newMatrices->end(); ++it){
 		delete *it;
 	}
 	/*
@@ -286,11 +282,8 @@ void skin::update(Skeleton* skel)
 		delete *it;
 	}*/ 
 	//positions.clear();
-	newMatrices.clear(); 
-	//delete &newMatrices;
-	
-	//v' = weight1(Matrix1 *v) 	
-	//Loop through vertices and compute blended position & normal
+	newMatrices->clear(); 
+	delete newMatrices;
 
 }
 

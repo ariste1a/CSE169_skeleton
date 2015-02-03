@@ -126,7 +126,7 @@ void Tester::Update() {
 	Cam.Update();
 	Cube.Update();
 	skeleton.update();
-	//skin.update(&this->skeleton);
+	skin.update(&this->skeleton);
 	// Tell glut to re-display the scene
 	glutSetWindow(WindowHandle);
 	glutPostRedisplay();
@@ -153,10 +153,10 @@ void Tester::Draw() {
 	// Draw components
 	Cam.Draw();		// Sets up projection & viewing matrices
 	//Cube.Draw();
-	//skeleton.draw(); 
+	skeleton.draw(); 
 	glLoadIdentity();
 	
-	//skin.draw();
+	skin.draw();
 	// Finish drawing scene
 	glFinish();
 	glutSwapBuffers();
