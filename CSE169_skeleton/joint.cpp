@@ -18,7 +18,7 @@ bool joint::load(Tokenizer &tokenizer)
 	while (1) {
 		char temp[256];
 		tokenizer.GetToken(temp);
-		if (strcmp(temp, "offset") == 0) {			
+		if (strcmp(temp, "offset") == 0) {		
 			offset[0] = tokenizer.GetFloat();
 			offset[1] = tokenizer.GetFloat();
 			offset[2] = tokenizer.GetFloat();			
@@ -130,32 +130,8 @@ void joint::setParent(joint* parent)
 }
 
 
-void joint::ComputeWorldMatrix(Matrix34 *parentMtx) {
-	this->local = &ComputeLocalMatrix();
-	this->world->Dot(*parentMtx,*local);
-	for (int i = 0; i < this->children.size(); i++)
-	{		
-		children[i]->ComputeWorldMatrix(this->world);
-	}
-	//for skinning: v' = v * W 
-}
-
-Matrix34 joint::ComputeLocalMatrix()
-{
-	//local: scale -> rotate -> translate
-	this->local = new Matrix34();
-	local->Identity(); 
-
-	Matrix34 *trans = new Matrix34();
-	trans->MakeTranslate(this->offset);	
-	local->Dot(*local, *trans); 
-	//local->Dot(*trans, doPose());  //don't pose until AFTER skinning 
-	delete trans; 
-	return *local;
-}
-
 //here go through each binding matrix with the skin and apply the skins here. 
-Matrix34 joint::computeLocalWithPose()
+void joint::computeLocalWithPose()
 {
 	//local: scale -> rotate -> translate	
 	this->local = new Matrix34();
@@ -164,22 +140,22 @@ Matrix34 joint::computeLocalWithPose()
 	Matrix34 *trans = new Matrix34();
 	trans->MakeTranslate(this->offset);
 
-	Matrix34 rot = doPose(); 
-	local->Dot(*trans, rot); //don't pose until AFTER skinning 
-	delete trans;
-	return *local;
+	Matrix34* rot = doPose();
+	local->Dot(*trans, *rot); //don't pose until AFTER skinning 
+	delete rot;
+	delete trans;	
 }
 
 void joint::computeWorldWithPose(Matrix34 *parentMtx)
 {
-	this->local = &computeLocalWithPose();
+	computeLocalWithPose();
 	this->world->Dot(*parentMtx, *local);	
 	for (int i = 0; i < this->children.size(); i++)
 	{
 		children[i]->computeWorldWithPose(this->world);
 	}
-	//for skinning: v' = v * W 	
-	//delete local;
+	delete local;
+	//for skinning: v' = v * W 		
 }
 
 Vector3 joint::getPose()
@@ -207,7 +183,7 @@ DOF joint::getRotZLimit()
 	return this->rotzlimit;
 }
 
-Matrix34 joint::doPose()
+Matrix34* joint::doPose()
 {
  	Matrix34 *rotation = new Matrix34();
 
@@ -239,7 +215,7 @@ Matrix34 joint::doPose()
 	}
 	//should move the pose outside of this?
 	rotation->FromEulers(pose.x, pose.y, pose.z, 0);
-	return *rotation; 
+	return rotation; 
 }
 
 Matrix34* joint::getWorldMatrix()

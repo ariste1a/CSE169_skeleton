@@ -209,7 +209,6 @@ void skin::draw()
 		}
 
 		//if		
-
 		glTexCoord2f(tex.x, tex.y);
 		glNormal3f(norm.x, norm.y, norm.z);
 		glVertex3f(tri.x, tri.y, tri.z); 
@@ -271,10 +270,12 @@ void skin::update(Skeleton* skel)
 			delete newVec;  
 		}
 		  
-		//delete;  tempVector
-		*(posPrime[i]) = *tempVector;	
+		//delete;  tempVector		
+		*(posPrime[i]) = *new Vector3(tempVector->x, tempVector->y, tempVector->z);//*tempVector;	
+		
 		tempNormal->Normalize(); 
 		*(normalsPrime[i]) = *tempNormal;
+
 		//	delete tempNormal;
 	}
 	for (auto it = newMatrices.begin(); it != newMatrices.end(); ++it){

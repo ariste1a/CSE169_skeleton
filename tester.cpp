@@ -68,8 +68,8 @@ Tester::Tester(int argc,char **argv) {
 	glEnable(GL_LIGHT1);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_TEXTURE_2D);
-	GLfloat light0_diffuse[] = { 1, 1.0, 0, 1.0 };
 
+	GLfloat light0_diffuse[] = { 1, 1.0, 0, 1.0 };
 	GLfloat light1_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
 	GLfloat light1_diffuse[] = { 0, 1.0, 1.0, 1.0 };	
 	GLfloat light1_specular[] = { 1.0, 1.0, 1.0, 1.0 };
@@ -80,7 +80,6 @@ Tester::Tester(int argc,char **argv) {
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_diffuse);
 	glLightfv(GL_LIGHT1, GL_SPECULAR, light1_specular);
 	glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
-
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
 	GLfloat lightpos[] = { 3, 2, 5, 1 };
 	glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
@@ -127,7 +126,7 @@ void Tester::Update() {
 	Cam.Update();
 	Cube.Update();
 	skeleton.update();
-	skin.update(&this->skeleton);
+	//skin.update(&this->skeleton);
 	// Tell glut to re-display the scene
 	glutSetWindow(WindowHandle);
 	glutPostRedisplay();
@@ -157,7 +156,7 @@ void Tester::Draw() {
 	//skeleton.draw(); 
 	glLoadIdentity();
 	
-	skin.draw();
+	//skin.draw();
 	// Finish drawing scene
 	glFinish();
 	glutSwapBuffers();
@@ -238,7 +237,7 @@ void Tester::Keyboard(int key,int x,int y) {
 				currJoint = skeleton.joints[0];
 			currJoint->changeDOF(3, currJoint->dofZ += 0.01);
 			break;
-		case 'm':
+		/*case 'm':
 			toMorph = !toMorph; 
 			std::cout << toMorph << std::endl;
 			if (toMorph)
@@ -250,7 +249,7 @@ void Tester::Keyboard(int key,int x,int y) {
 			{
 				this->skin.load(skinName.c_str());
 			}
-			break;
+			break;*/
 	}
 }
 
