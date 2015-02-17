@@ -47,7 +47,7 @@ Tester::Tester(int argc,char **argv) {
 	//morph2 = *new std::string(argv[4]);
 	anim = new animation(); 
 	anim->load(argv[3]);
-	std::cout << std::endl;	
+	std::cout << std::endl;		
 	
 	//getting all the children
 	//this->skeleton.getRoot()->printChildren(); 	
@@ -57,6 +57,7 @@ Tester::Tester(int argc,char **argv) {
 	this->skeleton.getRoot()->traverse(joints);
 	std::cout << joints->size() << std::endl;
 	this->skeleton.joints = *joints;
+	anim->skel = this->skeleton;
 
 	// Create the window
 	glutInitDisplayMode( GLUT_RGBA| GLUT_DOUBLE | GLUT_DEPTH );
@@ -130,6 +131,7 @@ void Tester::Update() {
 	Cube.Update();
 	skeleton.update();
 	skin.update(&this->skeleton);
+	anim->animate((clock()-start)/1000.0);
 	// Tell glut to re-display the scene
 	glutSetWindow(WindowHandle);
 	glutPostRedisplay();

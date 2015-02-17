@@ -13,9 +13,10 @@ public:
 	std::pair<float, float>* range; 
 	int numChannels;
 	std::vector<channel*>* channels;
-	void animate(); 
+	void animate(float time); 
 	Skeleton* skeleton; 
 	void load(char* filename);	
+	Skeleton skel; 
 	~animation();
 };
 

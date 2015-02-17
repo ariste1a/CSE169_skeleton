@@ -59,9 +59,24 @@ void animation::load(char* filename)
 	tokenizer.Close();
 }
 
-void animation::animate()
+void animation::animate(float time)
 {
-	//use the range of the file to set how many times to repeat. 
+	//use the range of the file to set how many times to repeat.
+	//first three channels are for root movement
+	float trueTime = fmod(time, this->range->second);
+	int numJoints = skel.joints.size(); 	
+	for (int i = 3; i < this->channels->size()-2; i+=3)
+	{
+ 		int currJoint = (i / 3)-1;
+		float x = channels->at(i)->evaluate(trueTime);
+		float y = channels->at(i + 1)->evaluate(trueTime);
+		float z = channels->at(i + 2)->evaluate(trueTime);
+		skel.joints.at(currJoint)->dofX = channels->at(i)->evaluate(trueTime);
+		skel.joints.at(currJoint)->dofY = channels->at(i + 1)->evaluate(trueTime);
+		skel.joints.at(currJoint)->dofZ = channels->at(i + 2)->evaluate(trueTime);
+	}
+
+	//or loop through all joints then evaluate their channel.
 }
 
 animation::~animation()

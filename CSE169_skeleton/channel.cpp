@@ -24,10 +24,12 @@ float channel::evaluate(float time)
 	int i = 0;
 	if (time < (*keyFrames)[0]->time)
 	{
+		//std::cout << "extrapolate" << std::endl; 
 		//extrapolate
 	}
 	if (time < (*keyFrames).back()->time)
 	{
+		//std::cout << "extrapolate" << std::endl;
 		//extrapolate
 	}
 	for (i; i < keyFrames->size(); i++)
@@ -47,6 +49,12 @@ float channel::evaluate(float time)
 			}
 		}
 	}
+
+	if (i == keyFrames->size())
+	{
+		i -= 1; 
+	}
+
 	(*keyFrames)[i]->inverseLerp(time);
 	return (*keyFrames)[i]->evalSpan(time);
 }
