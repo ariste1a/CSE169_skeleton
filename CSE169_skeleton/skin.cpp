@@ -262,7 +262,7 @@ void skin::update(Skeleton* skel)
 			//tempVector = tempVector + (currWeightVal)* *(positions[i]) * newMatrices[i]; 
 			delete newVec; 
 
-			//normals 			
+			//normals
 			newVec = new Vector3(); 
 			(*newMatrices)[currJoint]->Transform3x3((*(normals)[i]), *newVec); //WiMi			
 			*newVec = currWeightVal* (*newVec);

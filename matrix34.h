@@ -15,15 +15,18 @@ public:
 	Matrix34(float ax,float bx,float cx,float dx,
 		 float ay,float by,float cy,float dy,
 		 float az,float bz,float cz,float dz);
-
+	Matrix34::Matrix34(float ax, float bx, float cx, float dx,
+		float ay, float by, float cy, float dy,
+		float az, float bz, float cz, float dz,
+		float aw, float bw, float cw, float dw);
 	void Identity();
 
 	// Dot
-	void Dot(const Matrix34 &n,const Matrix34 &m);	// this = n (dot) m
-
+	void Dot(const Matrix34 &n,const Matrix34 &m);	// this = n (dot) m	
 	// Transform
 	void Transform(const Vector3 &in,Vector3 &out) const;
 	void Transform3x3(const Vector3 &in,Vector3 &out) const;
+	void VectorCross(const Vector3 &in, Vector3 &out) const; 
 
 	// MakeRotate (NOTE: t is an angle in RADIANS)
 	void MakeRotateX(float t);
@@ -58,7 +61,7 @@ public:
 	float Determinant3x3() const;
 	void Print(const char *s=0) const;
 	Vector3 &operator[](int i)						{return *((Vector3*)&(((float*)this)[i*4]));}	// yuck!
-	operator float*()								{return (float*)this;}
+	operator float*()								{return (float*)this;} //implicit float cast. 
 
 	// Static matrices
 	static Matrix34 IDENTITY;

@@ -14,7 +14,10 @@ public:
 	Vector3 () : x (0.0f), y (0.0f), z (0.0f)			{}
 	Vector3 (float x0, float y0, float z0) :
 		x (x0), y (y0), z (z0)							{}
+	Vector3(float x0, float y0, float z0, float w0) :
+		x(x0), y(y0), z(z0), w(w0)							{}
 	void Set (float x0, float y0, float z0)				{x = x0; y = y0; z = z0;}
+	void Set (float x0, float y0, float z0, float w0)				{ x = x0; y = y0; z = z0, w = w0; }
 	void Zero ()										{x = y = z = 0.0f;}
 
 	// Algebra
@@ -135,7 +138,7 @@ public:
 	static Vector3 ORIGIN;
 
 public:
-	float x, y, z;
+	float x, y, z, w;
 };
 
 

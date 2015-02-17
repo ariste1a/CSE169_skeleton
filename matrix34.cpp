@@ -24,6 +24,16 @@ Matrix34::Matrix34(float ax,float bx,float cx,float dx,
 	pad3=1.0f;
 }
 
+Matrix34::Matrix34(float ax, float bx, float cx, float dx,
+	float ay, float by, float cy, float dy,
+	float az, float bz, float cz, float dz,
+	float aw, float bw, float cw, float dw) {
+	a.Set(ax, ay, az, aw);	
+	b.Set(bx, by, bz, bw);
+	c.Set(cx, cy, cz, cw);
+	d.Set(dx, dy, dz, dw);	
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 void Matrix34::Identity() {
@@ -78,6 +88,17 @@ void Matrix34::Transform3x3(const Vector3 &in,Vector3 &out) const {
 	float y=in.x*a.y + in.y*b.y + in.z*c.y;
 	float z=in.x*a.z + in.y*b.z + in.z*c.z;
 	out.Set(x,y,z);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Vector cross against all 4x4
+////////////////////////////////////////////////////////////////////////////////
+void Matrix34::VectorCross(const Vector3 &in, Vector3 &out) const {
+	float x = in.x*a.x + in.y*b.x + in.z*c.x + d.x;
+	float y = in.x*a.y + in.y*b.y + in.z*c.y + d.y;
+	float z = in.x*a.z + in.y*b.z + in.z*c.z + d.z;
+	float w = in.x*a.w + in.y*b.w + in.z*c.w + d.w;
+	out.Set(x, y, z, w);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

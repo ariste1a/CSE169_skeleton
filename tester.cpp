@@ -13,6 +13,7 @@ static Tester *TESTER;
 int main(int argc, char **argv) {
 	glutInit(&argc, argv);
 	TESTER = new Tester(argc,argv);
+	TESTER->start = clock();
 	glutMainLoop();	
 	return 0;
 }
@@ -42,8 +43,10 @@ Tester::Tester(int argc,char **argv) {
 	this->skin.load(argv[2]);
 	skinName = *new std::string(argv[2]);
 	this->skin.skel = &this->skeleton;
-	morph = *new std::string(argv[3]);
-	morph2 = *new std::string(argv[4]);
+	//morph = *new std::string(argv[3]);
+	//morph2 = *new std::string(argv[4]);
+	anim = new animation(); 
+	anim->load(argv[3]);
 	std::cout << std::endl;	
 	
 	//getting all the children
@@ -153,7 +156,7 @@ void Tester::Draw() {
 	// Draw components
 	Cam.Draw();		// Sets up projection & viewing matrices
 	//Cube.Draw();
-	skeleton.draw(); 
+	//skeleton.draw(); 
 	glLoadIdentity();
 	
 	skin.draw();

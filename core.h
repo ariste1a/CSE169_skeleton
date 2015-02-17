@@ -21,7 +21,8 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
-
+#include <vector>
+#include <time.h>
 void drawAxis(float size);
 void drawWireBox(float xmin,float ymin,float zmin,float xmax,float ymax,float zmax);
 
