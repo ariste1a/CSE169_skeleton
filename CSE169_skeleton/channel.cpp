@@ -49,13 +49,9 @@ float channel::evaluate(float time)
 		if (this->extrapolate1 == "cycle_offset")
 		{
 			//use the previous last value;
-			float mod = keyFrames->back()->value - keyFrames->at(0)->value;
+			cycleNum = time / keyFrames->back()->time;
+			float mod = keyFrames->back()->time - keyFrames->at(0)->time;
 			time = fmod(time, mod) + (*keyFrames)[0]->time;
-			cycleTime = time; 
-			if (cycleTime >= keyFrames->back()->value)
-			{
-				cycleNum++; 
-			}
 		}
 		if (this->extrapolate1 == "bounce")
 		{
@@ -85,15 +81,10 @@ float channel::evaluate(float time)
 		if (this->extrapolate2 == "cycle_offset")
 		{
 			//divide to get curr # cycles
+			//std::cout << time / keyFrames->back()->time << std::endl;
+			cycleNum = time / keyFrames->back()-> time; 
 			float mod = keyFrames->back()->time - keyFrames->at(0)->time;
-			time = fmod(time, mod) + (*keyFrames)[0]->time;
-			time = floor(time * 1000 + 0.5) / 1000;
-			std::cout << time << std::endl; 
-			if (time == 0)
-			{
-				cycleNum++; 
-				std::cout << cycleNum << std::endl;
-			}
+			time = fmod(time, mod) + (*keyFrames)[0]->time;						
 		}
 		if (this->extrapolate2 == "bounce")
 		{
@@ -105,33 +96,7 @@ float channel::evaluate(float time)
 			time = fmod(time, mod) + keyFrames->at(0)->time;
 		}
 	}	
-	/*
-	for (int i = 0; i < keyFrames->size(); i++)
-	{
-		if ((*keyFrames)[i]->time == time)
-		{
-			return (*keyFrames)[i]->value;
-		}
-		else if ((*keyFrames)[i]->time < time && time < (*keyFrames)[i + 1]->time)
-		{
-			if (i < (*keyFrames).size() - 1)
-			{
-				t0 = (*keyFrames)[i]->time;
-				t1 = (*keyFrames)[i + 1]->time;
-				(*keyFrames)[i]->inverseLerp(time);		
-				if (cycleNum > 0)
-				{
-					//offset = cycleNum * keyFrames->back()->evalSpan->value
-					return (cycleNum * keyFrames->back()->value) + keyFrames->at(i)->evalSpan(time);
-				}				
-				return (*keyFrames)[i]->evalSpan(time);
-			}			
-		}
-		//std::cout << "shouldn't get here?" << std::endl; 		
-		//return (*keyFrames)[i]->value;		
-	}
-	//std::cout << "shouldn't get here?" << std::endl; 	
-	*/ 
+
 	for (int i = 0; i < keyFrames->size(); i++)
 	{
 		if (keyFrames->size() > 1)
@@ -139,27 +104,25 @@ float channel::evaluate(float time)
 			if ((*keyFrames)[i]->time == time)
 			{
 				return (*keyFrames)[i]->value;
-			}
-			else if (i < (*keyFrames).size() - 1)
+			}			
+			if ((*keyFrames)[i]->time < time && time < (*keyFrames)[i + 1]->time)
 			{
-				if ((*keyFrames)[i]->time < time && time < (*keyFrames)[i + 1]->time)
+				if (i < (*keyFrames).size() - 1)
 				{
 					float t0 = (*keyFrames)[i]->time;
 					float t1 = (*keyFrames)[i + 1]->time;
+					(*keyFrames)[i]->inverseLerp(t0, time, t1);			
+					return (*keyFrames)[i]->evalSpan(time);
+				}
+				else if (i == keyFrames->size() - 1)
+				{
+					float t0 = (*keyFrames)[i - 1]->time;
+					float t1 = (*keyFrames)[i]->time;
 					(*keyFrames)[i]->inverseLerp(t0, time, t1);
 					return (*keyFrames)[i]->evalSpan(time);
 				}
-			}
-			else if (i == keyFrames->size() - 1)
-			{
-				float t0 = (*keyFrames)[i - 1]->time;
-				float t1 = (*keyFrames)[i]->time;
-				(*keyFrames)[i]->inverseLerp(t0, time, t1);
-				return (*keyFrames)[i]->evalSpan(time);
-			}
-			//std::cout << "shouldn't get here?" << std::endl; 			
-		}
-		//return (*keyFrames)[i]->value;
+			}	
+		}		
 	}
 }
 

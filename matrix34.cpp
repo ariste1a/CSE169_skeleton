@@ -99,9 +99,9 @@ void Matrix34::Transform3x3(const Vector3 &in,Vector3 &out) const {
 // Vector cross against all 4x4
 ////////////////////////////////////////////////////////////////////////////////
 void Matrix34::VectorCross(const Vector3 &in, Vector3 &out) const {
-	float x = in.x*a.x + in.y*b.x + in.z*c.x + in.x*d.x;
-	float y = in.x*a.y + in.y*b.y + in.z*c.y + in.y*d.y;
-	float z = in.x*a.z + in.y*b.z + in.z*c.z + in.z*d.z;
+	float x = in.x*a.x + in.y*b.x + in.z*c.x + in.w*d.x;
+	float y = in.x*a.y + in.y*b.y + in.z*c.y + in.w*d.y;
+	float z = in.x*a.z + in.y*b.z + in.z*c.z + in.w*d.z;
 	float w = in.x*a.w + in.y*b.w + in.z*c.w + in.w*d.w;
 	
 	out.Set(x, y, z, w);
