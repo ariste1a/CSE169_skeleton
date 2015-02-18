@@ -20,7 +20,7 @@ public:
 	void setMin(float); 
 	void setMax(float); 
 	void setMinMax(float min, float max);
-	double clampRad(double rad);
+	double clampRad(double rad);	
 	~DOF();
 };
 

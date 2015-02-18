@@ -129,9 +129,9 @@ void Tester::Update() {
 	// Update the components in the world
 	Cam.Update();
 	Cube.Update();
+	anim->animate((clock() - start) / 1000.0);
 	skeleton.update();
 	skin.update(&this->skeleton);
-	anim->animate((clock()-start)/1000.0);
 	// Tell glut to re-display the scene
 	glutSetWindow(WindowHandle);
 	glutPostRedisplay();

@@ -3,10 +3,20 @@
 
 channel::channel()
 {	
+	/*
 	hermite = new Matrix34(2.0, -2.0, 1.0, 1.0, 
 						  -3.0, 3, - 2, -1,
 						   0, 0, 1, 0, 
 						   1, 0, 0, 0);
+	 */
+	//hermite = new Matrix34()
+	
+	
+	hermite = new Matrix34(2, -3, 0, 1,
+							-2, 3, 1, 0,
+							1, -2, 1, 0,
+							1, -1, 0, 0);
+							
 }
 
 
@@ -15,32 +25,71 @@ channel::channel()
 //if t falls exactly on a key return the key value
 //if t falls between two keys evaluat the cubic equation. 
 
-
 //sequential search
 float channel::evaluate(float time)
 {
-	float t0; 
-	float t1; 
-	int i = 0;
+	float t0 = 0;
+	float t1 = 0; 
+	int i;
 	if (time < (*keyFrames)[0]->time)
 	{
 		//std::cout << "extrapolate" << std::endl; 
 		//extrapolate
+		if (this->extrapolate1 == "constant")
+		{
+			return (*keyFrames)[0]->value; 
+		}
+		if (this->extrapolate1 == "linear")
+		{
+			return (*keyFrames)[0]->value;
+		}
+		if (this->extrapolate1 == "cycle_offset")
+		{
+			return (*keyFrames)[0]->value;
+		}
+		if (this->extrapolate1 == "bounce")
+		{
+			return (*keyFrames)[0]->value;
+		}
+		if (this->extrapolate1 == "cycle")
+		{
+			return (*keyFrames)[0]->value;
+		}
 	}
-	if (time < (*keyFrames).back()->time)
+	if (time > (*keyFrames).back()->time)
 	{
 		//std::cout << "extrapolate" << std::endl;
 		//extrapolate
+		if (this->extrapolate1 == "constant")
+		{
+			return (*keyFrames).back()->value;
+		}
+		if (this->extrapolate1 == "linear")
+		{
+			return (*keyFrames).back()->value;
+		}
+		if (this->extrapolate1 == "cycle_offset")
+		{
+			return (*keyFrames).back()->value;
+		}
+		if (this->extrapolate1 == "bounce")
+		{
+			return (*keyFrames).back()->value;
+		}
+		if (this->extrapolate1 == "cycle")
+		{
+			return (*keyFrames).back()->value;
+		}
 	}
-	for (i; i < keyFrames->size(); i++)
+	for (i=0; i < keyFrames->size(); i++)
 	{
 		if ((*keyFrames)[i]->time == time)
 		{						
 			return (*keyFrames)[i]->value;
 		}
-		if ((*keyFrames).size() > i+1)
+		if (i < (*keyFrames).size()-1)
 		{
-			if (time <(*keyFrames)[i]->time && time > (*keyFrames)[i + 1]->time)
+			if ((*keyFrames)[i]->time > time && time < (*keyFrames)[i + 1]->time)
 			{
 				t0 = (*keyFrames)[i]->time;
 				t1 = (*keyFrames)[i+1]->time;
@@ -55,8 +104,8 @@ float channel::evaluate(float time)
 		i -= 1; 
 	}
 
-	(*keyFrames)[i]->inverseLerp(time);
-	return (*keyFrames)[i]->evalSpan(time);
+	//(*keyFrames)[i]->inverseLerp(time);
+	//return (*keyFrames)[i]->evalSpan(time);
 }
 
 channel::~channel()
@@ -71,10 +120,10 @@ void channel::precomputeCubics()
 	{
 		float vin = 0;
 		float vout = 0;
-		float p0;
-		float p1;
-		float t0;
-		float t1;		
+		float p0 = 0; 
+		float p1 = 0; 
+		float t0 = 0;
+		float t1 = 0; 
 
 		if ((*keyFrames)[i]->tanIn == "smooth")
 		{
@@ -113,7 +162,7 @@ void channel::precomputeCubics()
 
 				t0 = (*keyFrames)[i-1]->time;
 				t1 = (*keyFrames)[i+1]->time;
-			}			
+			}
 			vin = (p1 - p0) / (t1 - t0);
 
 			(*keyFrames)[i]->out = vin;
@@ -138,7 +187,7 @@ void channel::precomputeCubics()
 					vin = (p1 - p0) / (t1 - t0);
 					vout = vin;
 
-					(*keyFrames)[0]->out = vin; 
+					(*keyFrames)[0]->out = vin;
 					(*keyFrames)[1]->in = vin;
 				}
 			}
@@ -150,26 +199,31 @@ void channel::precomputeCubics()
 			else
 			{
 				p0 = (*keyFrames)[i]->value;
-				p1 = (*keyFrames)[i+1]->value;
+				p1 = (*keyFrames)[i + 1]->value;
 
 				t0 = (*keyFrames)[i]->time;
-				t1 = (*keyFrames)[i+1]->time;
+				t1 = (*keyFrames)[i + 1]->time;
 				vin = (p1 - p0) / (t1 - t0);
 
 				(*keyFrames)[i]->out = vin;
-				(*keyFrames)[1+1]->in = vin;
+				(*keyFrames)[1 + 1]->in = vin;
 			}
-		}		
-		(*keyFrames)[i]->precomSpan = 1 / (t0 - t1);
+		}
+		float precomp = 1 / (t0 - t1); 
+		if ((t0 - t1) == 1)
+		{
+			precomp = 0;
+		}
+		(*keyFrames)[i]->precomSpan = precomp;
 	}
 
-	for (int i = 0; i < keyFrames->size(); i++)
+	for (int i = 0; i < keyFrames->size()-1; i++)
 	{
 		float p0 = (*keyFrames)[i]->value; 
 		float p1 = (*keyFrames)[i+1]->value;
 
 		float t0 = (*keyFrames)[i]->time;
-		float t1 = (*keyFrames)[i]->time;
+		float t1 = (*keyFrames)[i+1]->time;
 
 		float v0 = (*keyFrames)[i]->in;
 		float v1 = (*keyFrames)[i]->out;

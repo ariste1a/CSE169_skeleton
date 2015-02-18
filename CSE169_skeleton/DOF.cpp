@@ -56,6 +56,11 @@ double DOF::clampRad(double rad)
 	}
 	return rad;
 }
+
+void DOF::setValue(float value)
+{
+	this->value = value;
+}
 DOF::~DOF()
 {
 }

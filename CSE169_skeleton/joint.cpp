@@ -143,7 +143,7 @@ void joint::computeLocalWithPose()
 	Matrix34* rot = doPose();
 	local->Dot(*trans, *rot); //don't pose until AFTER skinning 
 	delete rot;
-	delete trans;	
+	delete trans;
 }
 
 void joint::computeWorldWithPose(Matrix34 *parentMtx)
@@ -232,7 +232,7 @@ joint::~joint()
 	delete world; 
 	delete local; 
 	delete parent; 
-	delete &children; 
+	delete &children;
 }
 
 void joint::changeDOF(int dof, float deg)

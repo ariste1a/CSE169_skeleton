@@ -57,6 +57,11 @@ void animation::load(char* filename)
 		this->channels->push_back(chan); 
 	}
 	tokenizer.Close();
+
+	for (int i = 0; i < channels->size(); i++)
+	{
+		channels->at(i)->precomputeCubics();
+	}
 }
 
 void animation::animate(float time)
@@ -71,9 +76,14 @@ void animation::animate(float time)
 		float x = channels->at(i)->evaluate(trueTime);
 		float y = channels->at(i + 1)->evaluate(trueTime);
 		float z = channels->at(i + 2)->evaluate(trueTime);
+		skel.joints.at(currJoint)->changeDOF(1, channels->at(i)->evaluate(trueTime));
+		skel.joints.at(currJoint)->changeDOF(2, channels->at(i+1)->evaluate(trueTime));
+		skel.joints.at(currJoint)->changeDOF(3, channels->at(i+2)->evaluate(trueTime));
+		/*
 		skel.joints.at(currJoint)->dofX = channels->at(i)->evaluate(trueTime);
 		skel.joints.at(currJoint)->dofY = channels->at(i + 1)->evaluate(trueTime);
 		skel.joints.at(currJoint)->dofZ = channels->at(i + 2)->evaluate(trueTime);
+		*/
 	}
 
 	//or loop through all joints then evaluate their channel.

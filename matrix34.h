@@ -15,6 +15,7 @@ public:
 	Matrix34(float ax,float bx,float cx,float dx,
 		 float ay,float by,float cy,float dy,
 		 float az,float bz,float cz,float dz);
+
 	Matrix34::Matrix34(float ax, float bx, float cx, float dx,
 		float ay, float by, float cy, float dy,
 		float az, float bz, float cz, float dz,
