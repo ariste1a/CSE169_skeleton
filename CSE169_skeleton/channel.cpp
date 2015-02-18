@@ -34,17 +34,9 @@ float channel::evaluate(float time)
 	
 	if (time < (*keyFrames)[0]->time)
 	{
-		//std::cout << "extrapolate" << std::endl; 
-		//extrapolate
 		if (this->extrapolate1 == "constant")
 		{
 			return keyFrames->at(0)->value; 
-		}
-		if (this->extrapolate1 == "linear")
-		{
-			//return (*keyFrames)[0]->value;
-			//get first keyframe value + velocity * (difference between curr time and keyfame time); 			
-			return keyFrames->at(0)->value + ((keyFrames->at(0)->out)*(time - keyFrames->at(0)->time));
 		}
 		if (this->extrapolate1 == "cycle_offset")
 		{
@@ -53,16 +45,16 @@ float channel::evaluate(float time)
 			float mod = keyFrames->back()->time - keyFrames->at(0)->time;
 			time = fmod(time, mod) + (*keyFrames)[0]->time;
 		}
-		if (this->extrapolate1 == "bounce")
-		{
-			//don't do anything
-			return (*keyFrames)[0]->value;
-		}
 		if (this->extrapolate1 == "cycle")
 		{
 			//restart from the beginning; 			
-			float mod = keyFrames->back()->value - keyFrames->at(0)->value;
-			time = fmod(time, mod) + (*keyFrames)[0]->time;
+			//float mod = keyFrames->back()->time - keyFrames->at(0)->time;
+			while (time < keyFrames->at(0)->time)
+			{
+				time += (keyFrames->back()->time - keyFrames->at(0)->time);
+				//value -= keyFrames->back()->value - keyFrames->at(0)->value; 
+			}
+			//time = fmod(time, mod) + (*keyFrames)[0]->time;
 		}
 	}
 
@@ -74,10 +66,6 @@ float channel::evaluate(float time)
 		{
 			return keyFrames->back()->value;
 		}
-		if (this->extrapolate2 == "linear")
-		{
-			return (keyFrames->back()->value) + ((*keyFrames)[0]->out * (time - keyFrames->back()->time));
-		}
 		if (this->extrapolate2 == "cycle_offset")
 		{
 			//divide to get curr # cycles
@@ -86,43 +74,49 @@ float channel::evaluate(float time)
 			float mod = keyFrames->back()->time - keyFrames->at(0)->time;
 			time = fmod(time, mod) + (*keyFrames)[0]->time;						
 		}
-		if (this->extrapolate2 == "bounce")
-		{
-			return (*keyFrames).back()->value;
-		}
 		if (this->extrapolate2 == "cycle")
 		{
-			float mod = keyFrames->back()->value - keyFrames->at(0)->value;
-			time = fmod(time, mod) + keyFrames->at(0)->time;
+			//float mod = keyFrames->back()->time - keyFrames->at(0)->time;
+			//time = fmod(time, mod) + keyFrames->at(0)->time;
+			while (time > keyFrames->back()->time)
+			{
+				time -= (keyFrames->back()->time - keyFrames->at(0)->time);
+				//value -= keyFrames->back()->value - keyFrames->at(0)->value; 
+			}
 		}
 	}	
 
+	if (keyFrames->size() == 1)
+	{
+		//return keyFrames->at(0)->evalSpan(time); 
+		return keyFrames->at(0)->value;
+	}
 	for (int i = 0; i < keyFrames->size(); i++)
 	{
-		if (keyFrames->size() > 1)
-		{
 			if ((*keyFrames)[i]->time == time)
 			{
 				return (*keyFrames)[i]->value;
 			}			
+			/*
 			if ((*keyFrames)[i]->time < time && time < (*keyFrames)[i + 1]->time)
 			{
 				if (i < (*keyFrames).size() - 1)
 				{
 					float t0 = (*keyFrames)[i]->time;
 					float t1 = (*keyFrames)[i + 1]->time;
-					(*keyFrames)[i]->inverseLerp(t0, time, t1);			
-					return (*keyFrames)[i]->evalSpan(time);
-				}
-				else if (i == keyFrames->size() - 1)
-				{
-					float t0 = (*keyFrames)[i - 1]->time;
-					float t1 = (*keyFrames)[i]->time;
 					(*keyFrames)[i]->inverseLerp(t0, time, t1);
 					return (*keyFrames)[i]->evalSpan(time);
 				}
-			}	
-		}		
+			}
+			*/			
+			if (time < keyFrames->at(i)->time)
+			{
+				float t1 = (*keyFrames)[i]->time;
+				float t0 = (*keyFrames)[i-1]->time;
+				(*keyFrames)[i-1]->inverseLerp(t0, time, t1);
+				return (*keyFrames)[i-1]->evalSpan(time);
+			}
+		//return (*keyFrames)[i]->evalSpan(time);
 	}
 }
 
@@ -148,6 +142,7 @@ void channel::precomputeCubics()
 		{
 			(*keyFrames)[i]->in = 0;
 			(*keyFrames)[i]->out = 0;
+			continue;
 		}
 
 		if ((*keyFrames)[i]->tanIn == "smooth")
@@ -206,7 +201,7 @@ void channel::precomputeCubics()
 		}	   
 		
 		if ((*keyFrames)[i]->tanIn == "linear")
-		{						
+		{
 			if (i == keyFrames->size() - 1)
 			{
 				p0 = keyFrames->at(i-1)->value;
@@ -242,30 +237,8 @@ void channel::precomputeCubics()
 				(*keyFrames)[i]->out = vin;
 				(*keyFrames)[1+1]->in = vin;
 				continue;
-			}		
-			//need to program if it's the last one			
-			else
-			{
-				p0 = (*keyFrames)[i]->value;
-				p1 = (*keyFrames)[i + 1]->value;
-
-				t0 = (*keyFrames)[i]->time;
-				t1 = (*keyFrames)[i + 1]->time;
-				vin = (p1 - p0) / (t1 - t0);
-				if ((t1 - t0) == 0)
-				{
-					vin = 0;
-				}
-				(*keyFrames)[i]->out = vin;
-				(*keyFrames)[i + 1]->in = vin;
 			}			
 		}
-				 					
-		//////////
-		/*
-		(*keyFrames)[i]->in = 0;
-		(*keyFrames)[i]->out = 0;
-		*/
 	}
 	
 	for (int i = 0; i < keyFrames->size()-1; i++)

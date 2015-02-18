@@ -78,7 +78,7 @@ void animation::animate(float time)
 	float movZ = channels->at(2)->evaluate(trueTime);
 
 	//skel.joints.at(0)->setOffset(movX, movY, movZ);
-	std::cout << "moving " + skel.joints.at(0)->getName() + "by " << channels->at(2)->evaluate(trueTime) << " at " << trueTime <<  std::endl;
+	//std::cout << "moving " + skel.joints.at(0)->getName() + "by " << channels->at(2)->evaluate(trueTime) << " at " << trueTime <<  std::endl;
 	for (int i = 3; i < this->channels->size(); i+=3)
 	{
  		int currJoint = (i / 3)-1;

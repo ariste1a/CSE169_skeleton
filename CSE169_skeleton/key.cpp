@@ -35,6 +35,7 @@ float key::evalSpan(float t)
 	float x; 
 		
 	x = (a*u*u*u) + (b*u*u) + (c*u) + d;
+	//return ((a * u + b) * u + c) * u + d;
 	return x; 
 }
 
