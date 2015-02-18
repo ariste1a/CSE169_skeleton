@@ -131,12 +131,12 @@ void Tester::Update() {
 	Cam.Update();
 	Cube.Update();
 	
-	anim->animate(time); 
-	//weird lag after 3 cycles 
-	time += 0.01;
 	//anim->animate((clock() - start) / 10000.0);
 	skeleton.update();
 	skin.update(&this->skeleton);
+	anim->animate(time);
+	//weird lag after 3 cycles 
+	time += 0.01;
 	// Tell glut to re-display the scene
 	glutSetWindow(WindowHandle);
 	glutPostRedisplay();

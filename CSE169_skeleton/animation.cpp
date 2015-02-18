@@ -69,8 +69,7 @@ void animation::animate(float time)
 	//use the range of the file to set how many times to repeat.
 	//first three channels are for root movement
 	float trueTime = fmod(time, this->range->second);
-	//trueTime = (float)(floor(trueTime*(1.0f / 4.0) + 0.5) / (1.0f / 4.0));
-	//trueTime = floor(trueTime * 1000 + 0.5) / 1000;
+	
 	int numJoints = skel.joints.size(); 	
 
 	float movX = channels->at(0)->evaluate(trueTime);
@@ -78,7 +77,7 @@ void animation::animate(float time)
 	float movZ = channels->at(2)->evaluate(trueTime);
 
 	//skel.joints.at(0)->setOffset(movX, movY, movZ);
-	//std::cout << "moving " + skel.joints.at(0)->getName() + "by " << channels->at(2)->evaluate(trueTime) << " at " << trueTime <<  std::endl;
+	std::cout << "moving " + skel.joints.at(0)->getName() + "by " << channels->at(2)->evaluate(trueTime) << " at " << trueTime <<  std::endl;
 	for (int i = 3; i < this->channels->size(); i+=3)
 	{
  		int currJoint = (i / 3)-1;
@@ -89,6 +88,12 @@ void animation::animate(float time)
 		skel.joints.at(currJoint)->changeDOF(2, channels->at(i+1)->evaluate(trueTime));
 		skel.joints.at(currJoint)->changeDOF(3, channels->at(i+2)->evaluate(trueTime));
 
+		//abdomen causing trouble between 1.5 and 2, 3.5 and 4 seconds
+		if (currJoint == 2)
+		{
+			if (x > 1)
+			std::cout << skel.joints.at(currJoint)->getName() << " " << x << " " << y << " " << z << "  time " << trueTime << std::endl;
+		}
 		/*
 		skel.joints.at(currJoint)->dofX = channels->at(i)->evaluate(trueTime);
 		skel.joints.at(currJoint)->dofY = channels->at(i + 1)->evaluate(trueTime);

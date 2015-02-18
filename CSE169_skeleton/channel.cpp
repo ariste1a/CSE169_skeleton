@@ -41,9 +41,16 @@ float channel::evaluate(float time)
 		if (this->extrapolate1 == "cycle_offset")
 		{
 			//use the previous last value;
+			/*
 			cycleNum = time / keyFrames->back()->time;
 			float mod = keyFrames->back()->time - keyFrames->at(0)->time;
 			time = fmod(time, mod) + (*keyFrames)[0]->time;
+			*/
+			while (time < keyFrames->at(0)->time)
+			{
+				time += (keyFrames->back()->time - keyFrames->at(0)->time);
+				//value -= keyFrames->back()->value - keyFrames->at(0)->value; 
+			}
 		}
 		if (this->extrapolate1 == "cycle")
 		{
@@ -70,9 +77,15 @@ float channel::evaluate(float time)
 		{
 			//divide to get curr # cycles
 			//std::cout << time / keyFrames->back()->time << std::endl;
-			cycleNum = time / keyFrames->back()-> time; 
+			/*cycleNum = time / keyFrames->back()-> time; 
 			float mod = keyFrames->back()->time - keyFrames->at(0)->time;
-			time = fmod(time, mod) + (*keyFrames)[0]->time;						
+			time = fmod(time, mod) + (*keyFrames)[0]->time;	
+			*/ 
+			while (time > keyFrames->back()->time)
+			{
+				time -= (keyFrames->back()->time - keyFrames->at(0)->time);
+				//value -= keyFrames->back()->value - keyFrames->at(0)->value; 
+			}
 		}
 		if (this->extrapolate2 == "cycle")
 		{
@@ -109,6 +122,7 @@ float channel::evaluate(float time)
 				}
 			}
 			*/			
+			
 			if (time < keyFrames->at(i)->time)
 			{
 				float t1 = (*keyFrames)[i]->time;
@@ -140,8 +154,8 @@ void channel::precomputeCubics()
 
 		if ((*keyFrames)[i]->tanIn == "flat")
 		{
-			(*keyFrames)[i]->in = 0;
-			(*keyFrames)[i]->out = 0;
+			(*keyFrames)[i]->in = 0.0;
+			(*keyFrames)[i]->out = 0.0;
 			continue;
 		}
 
@@ -178,6 +192,7 @@ void channel::precomputeCubics()
 				{
 					vin = 0;
 				}
+				(*keyFrames)[i]->in = (*keyFrames)[i - 1]->out;
 				(*keyFrames)[i]->out = vin;
 				keyFrames->at(0)->in = vin; 
 				continue;
