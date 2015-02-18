@@ -31,14 +31,14 @@ channel::channel()
 //sequential search
 float channel::evaluate(float time)
 {
-	/*
+	
 	if (time < (*keyFrames)[0]->time)
 	{
 		//std::cout << "extrapolate" << std::endl; 
 		//extrapolate
 		if (this->extrapolate1 == "constant")
 		{
-			return (*keyFrames)[0]->value; 
+			return keyFrames->at(0)->value; 
 		}
 		if (this->extrapolate1 == "linear")
 		{
@@ -76,7 +76,7 @@ float channel::evaluate(float time)
 		//extrapolate
 		if (this->extrapolate2 == "constant")
 		{
-			return (*keyFrames).back()->value;
+			return keyFrames->back()->value;
 		}
 		if (this->extrapolate2 == "linear")
 		{
@@ -105,7 +105,7 @@ float channel::evaluate(float time)
 			time = fmod(time, mod) + keyFrames->at(0)->time;
 		}
 	}	
-
+	/*
 	for (int i = 0; i < keyFrames->size(); i++)
 	{
 		if ((*keyFrames)[i]->time == time)
@@ -132,7 +132,6 @@ float channel::evaluate(float time)
 	}
 	//std::cout << "shouldn't get here?" << std::endl; 	
 	*/ 
-
 	for (int i = 0; i < keyFrames->size(); i++)
 	{
 		if (keyFrames->size() > 1)
@@ -160,7 +159,7 @@ float channel::evaluate(float time)
 			}
 			//std::cout << "shouldn't get here?" << std::endl; 			
 		}
-		return (*keyFrames)[i]->value;
+		//return (*keyFrames)[i]->value;
 	}
 }
 
@@ -181,6 +180,12 @@ void channel::precomputeCubics()
 		float p1 = 0; 
 		float t0 = 0;
 		float t1 = 0; 
+
+		if ((*keyFrames)[i]->tanIn == "flat")
+		{
+			(*keyFrames)[i]->in = 0;
+			(*keyFrames)[i]->out = 0;
+		}
 
 		if ((*keyFrames)[i]->tanIn == "smooth")
 		{
@@ -235,13 +240,7 @@ void channel::precomputeCubics()
 			(*keyFrames)[i]->out = vin;
 			(*keyFrames)[i]->in = vin;
 			continue;
-		}
-
-	    if ((*keyFrames)[i]->tanIn == "flat")
-		{
-			(*keyFrames)[i]->in = 0;
-			(*keyFrames)[i]->out = 0;
-		}
+		}	   
 		
 		if ((*keyFrames)[i]->tanIn == "linear")
 		{						
@@ -317,20 +316,9 @@ void channel::precomputeCubics()
 		float v0 = (*keyFrames)[i]->out;
 		float v1 = (*keyFrames)[i+1]->in;
 
-		if (i == 0)
-		{
-			if (keyFrames->at(0)->tanIn == "smooth")
-			{
-				v0 = keyFrames->back()->out; 
-			}
-		}
-		else if (i == keyFrames->size() - 1)
-		{
-						
-		}
 		(*keyFrames)[i]->precomputeCoeff(*this->hermite, p0, p1, t0, t1, v0, v1);
 	}
-
+	
 	if (keyFrames->size() == 1)
 	{
 		float p0 = (*keyFrames)[0]->value;
@@ -343,5 +331,5 @@ void channel::precomputeCubics()
 		float v1 = (*keyFrames)[0]->out;
 
 		(*keyFrames)[0]->precomputeCoeff(*this->hermite, p0, p1, t0, t1, v0, v1);
-	}
+	}	
 }

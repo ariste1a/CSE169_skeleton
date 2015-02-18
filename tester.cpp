@@ -133,7 +133,7 @@ void Tester::Update() {
 	
 	anim->animate(time); 
 	//weird lag after 3 cycles 
-	time += 0.001;
+	time += 0.005;
 	//anim->animate((clock() - start) / 10000.0);
 	skeleton.update();
 	skin.update(&this->skeleton);
