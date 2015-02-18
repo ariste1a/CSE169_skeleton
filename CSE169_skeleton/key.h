@@ -13,6 +13,7 @@ public:
 	Vector3 *cubicCoeff;
 	void precomputeCoeff(Matrix34 hermite, float p0, float p1, float t0, float t1, float v0, float v1);
 	void  inverseLerp(float t);
+	void  inverseLerp(float t0, float t, float t1);
 	float lerpTime; 
 	float key::evalSpan(float t);
 	float in;

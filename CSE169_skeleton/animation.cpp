@@ -69,8 +69,17 @@ void animation::animate(float time)
 	//use the range of the file to set how many times to repeat.
 	//first three channels are for root movement
 	float trueTime = fmod(time, this->range->second);
+	//trueTime = (float)(floor(trueTime*(1.0f / 4.0) + 0.5) / (1.0f / 4.0));
+	//trueTime = floor(trueTime * 1000 + 0.5) / 1000;
 	int numJoints = skel.joints.size(); 	
-	for (int i = 3; i < this->channels->size()-2; i+=3)
+
+	float movX = channels->at(0)->evaluate(trueTime);
+	float movY = channels->at(1)->evaluate(trueTime);
+	float movZ = channels->at(2)->evaluate(trueTime);
+
+	skel.joints.at(0)->setOffset(movX, movY, movZ);
+	std::cout << "moving " + skel.joints.at(0)->getName() + "by " << channels->at(2)->evaluate(trueTime) << " at " << trueTime <<  std::endl;
+	for (int i = 3; i < this->channels->size(); i+=3)
 	{
  		int currJoint = (i / 3)-1;
 		float x = channels->at(i)->evaluate(trueTime);
@@ -79,6 +88,7 @@ void animation::animate(float time)
 		skel.joints.at(currJoint)->changeDOF(1, channels->at(i)->evaluate(trueTime));
 		skel.joints.at(currJoint)->changeDOF(2, channels->at(i+1)->evaluate(trueTime));
 		skel.joints.at(currJoint)->changeDOF(3, channels->at(i+2)->evaluate(trueTime));
+
 		/*
 		skel.joints.at(currJoint)->dofX = channels->at(i)->evaluate(trueTime);
 		skel.joints.at(currJoint)->dofY = channels->at(i + 1)->evaluate(trueTime);

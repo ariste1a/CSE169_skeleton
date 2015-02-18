@@ -31,6 +31,7 @@ public:
 	void MouseMotion(int x,int y);
 	time_t start;
 	time_t current;
+	float time;
 
 private:
 	// Window management

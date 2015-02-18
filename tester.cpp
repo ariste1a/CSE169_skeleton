@@ -114,6 +114,7 @@ Tester::Tester(int argc,char **argv) {
 	Cam.SetAspect(float(WinX)/float(WinY));	
 	if (this->skin.texcoords.size() >0)
 	this->skin.textureLoader.LoadGLTextures(skin.texName.c_str());
+	time = 0.0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -129,7 +130,11 @@ void Tester::Update() {
 	// Update the components in the world
 	Cam.Update();
 	Cube.Update();
-	anim->animate((clock() - start) / 1000.0);
+	
+	anim->animate(time); 
+	//weird lag after 3 cycles 
+	time += 0.001;
+	//anim->animate((clock() - start) / 10000.0);
 	skeleton.update();
 	skin.update(&this->skeleton);
 	// Tell glut to re-display the scene

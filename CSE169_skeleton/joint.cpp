@@ -235,6 +235,10 @@ joint::~joint()
 	delete &children;
 }
 
+void joint::setOffset(float x, float y, float z)
+{
+	this->offset = *new Vector3(x, y, z); 
+}
 void joint::changeDOF(int dof, float deg)
 {	
 	if (dof == 1)

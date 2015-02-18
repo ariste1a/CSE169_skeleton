@@ -35,7 +35,7 @@ public:
 	std::string getName(); 
 	void setName(std::string); 	
 	std::vector<float> getOffset();
-	void setOffset(std::vector<float>);
+	void setOffset(float, float, float);
 	void setParent(joint* parent); 
 	joint* getParent(); 
 	void printChildren();

@@ -12,6 +12,11 @@ public:
 	float evaluate(float time); //find the proper span for the given time, then evaluate the cubic equation for the span. 
 	void precomputeCubics();
 	key findKeyframe(); 
-	Matrix34 *hermite; 
+	Matrix34 *hermite;
+	int cycleNum; 
+	float offset = 0;
+	float cycleDistance = 0; 
+	bool cycleReset = false; 
+	float cycleTime = 0; 	
 	~channel();
 };
