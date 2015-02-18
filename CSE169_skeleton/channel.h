@@ -14,9 +14,6 @@ public:
 	key findKeyframe(); 
 	Matrix34 *hermite;
 	int cycleNum; 
-	float offset = 0;
-	float cycleDistance = 0; 
-	bool cycleReset = false; 
-	float cycleTime = 0; 	
+	float value;
 	~channel();
 };

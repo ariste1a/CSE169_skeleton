@@ -9,6 +9,7 @@ channel::channel()
 						   0, 0, 1, 0, 
 						   1, 0, 0, 0);
 	cycleNum = 0; 
+	value = 0;
 	//hermite = new Matrix34()
 	
 	/*
@@ -17,9 +18,6 @@ channel::channel()
 							1, -2, 1, 0,
 							1, -1, 0, 0);
 				*/			
-	float cycleDistance = 0;
-	bool cycleReset = true;
-	float cycleTime = 0;
 }
 
 
@@ -31,7 +29,6 @@ channel::channel()
 //sequential search
 float channel::evaluate(float time)
 {
-	
 	if (time < (*keyFrames)[0]->time)
 	{
 		if (this->extrapolate1 == "constant")
@@ -48,9 +45,10 @@ float channel::evaluate(float time)
 			*/
 			while (time < keyFrames->at(0)->time)
 			{
-				time += (keyFrames->back()->time - keyFrames->at(0)->time);
-				//value -= keyFrames->back()->value - keyFrames->at(0)->value; 
+				time += (keyFrames->back()->time - keyFrames->at(0)->time);				
+				value -= (keyFrames->back()->value - keyFrames->at(0)->value);
 			}
+			
 		}
 		if (this->extrapolate1 == "cycle")
 		{
@@ -58,8 +56,7 @@ float channel::evaluate(float time)
 			//float mod = keyFrames->back()->time - keyFrames->at(0)->time;
 			while (time < keyFrames->at(0)->time)
 			{
-				time += (keyFrames->back()->time - keyFrames->at(0)->time);
-				//value -= keyFrames->back()->value - keyFrames->at(0)->value; 
+				time += (keyFrames->back()->time - keyFrames->at(0)->time);				
 			}
 			//time = fmod(time, mod) + (*keyFrames)[0]->time;
 		}
@@ -75,16 +72,15 @@ float channel::evaluate(float time)
 		}
 		if (this->extrapolate2 == "cycle_offset")
 		{
-			//divide to get curr # cycles
-			//std::cout << time / keyFrames->back()->time << std::endl;
-			/*cycleNum = time / keyFrames->back()-> time; 
-			float mod = keyFrames->back()->time - keyFrames->at(0)->time;
-			time = fmod(time, mod) + (*keyFrames)[0]->time;	
-			*/ 
+			//divide to get curr # cycles			
+			//std::cout << round(time / (keyFrames->back()->time - keyFrames->at(0)->time)) << std::endl;
+			std::cout << cycleNum * (keyFrames->back()->value - keyFrames->at(0)->value) << std::endl; 
+			cycleNum = time / (keyFrames->back()->time - keyFrames->at(0)->time);
 			while (time > keyFrames->back()->time)
 			{
 				time -= (keyFrames->back()->time - keyFrames->at(0)->time);
-				//value -= keyFrames->back()->value - keyFrames->at(0)->value; 
+				value += (keyFrames->back()->value - keyFrames->at(0)->value);				
+				//std::cout << cycleNum << std::endl;				
 			}
 		}
 		if (this->extrapolate2 == "cycle")
@@ -93,11 +89,10 @@ float channel::evaluate(float time)
 			//time = fmod(time, mod) + keyFrames->at(0)->time;
 			while (time > keyFrames->back()->time)
 			{
-				time -= (keyFrames->back()->time - keyFrames->at(0)->time);
-				//value -= keyFrames->back()->value - keyFrames->at(0)->value; 
+				time -= (keyFrames->back()->time - keyFrames->at(0)->time);				
 			}
 		}
-	}	
+	}
 
 	if (keyFrames->size() == 1)
 	{
@@ -128,7 +123,8 @@ float channel::evaluate(float time)
 				float t1 = (*keyFrames)[i]->time;
 				float t0 = (*keyFrames)[i-1]->time;
 				(*keyFrames)[i-1]->inverseLerp(t0, time, t1);
-				return (*keyFrames)[i-1]->evalSpan(time);
+				return (*keyFrames)[i - 1]->evalSpan(time) + (cycleNum * (keyFrames->back()->value - keyFrames->at(0)->value));
+				//return (*keyFrames)[i - 1]->evalSpan(time) + value; 
 			}
 		//return (*keyFrames)[i]->evalSpan(time);
 	}
